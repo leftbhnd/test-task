@@ -1,6 +1,6 @@
 <template>
   <div>
-    Тестовое
+    Тестовое здание
     <table>
       <thead>
         <tr>
