@@ -6,5 +6,8 @@ Vue.config.productionTip = false
 
 new Vue({
   store,
+  mounted () {
+    this.$store.dispatch('getDataFromBack')
+  },
   render: h => h(App)
 }).$mount('#app')
