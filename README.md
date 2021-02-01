@@ -27,18 +27,18 @@
 1. Представим, что бэкендеры обещали развернуть среду со следующими методами и интерфейсами, но сейчас у них нет времени (вы можете реализовать свои заглушки отталкиваясь от следующих интерфейсов):
 
 ```ts
+interface Item {
+  id: number
+}
+
 /** Ответ методов POST PUT DELETE */
 interface Response {
   /** Указывает на результат запроса */
   success: boolean
-  /** Полезная нагрузка в виде id записи или null, в случае ошибки */
-  payload: { id: number } | null
+  /** Полезная нагрузка в виде Item записи или {}, в случае ошибки */
+  payload: Item | {}
   /** Описание операции/ошибки */
   description: string
-}
-
-interface Item {
-  id: number
 }
 
 GET -> /api/
@@ -48,25 +48,22 @@ interface Response {
   description: string
 }
 
-
 POST -> /api/
 (Content-Type: application/json)
 interface Request {
   item: Item
 }
 
-
-
 PUT -> /api/
 (Content-Type: application/json)
 interface Request {
-
+  item: Item
 }
-
 
 DELETE -> /api/
 (Content-Type: application/json)
 interface Request {
+  /** id элемента, который необходимо удалить из базы */
   id: number
 }
 ```
