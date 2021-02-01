@@ -61,7 +61,7 @@ export default new Vuex.Store({
     },
     changeItem: function ({ commit }, payload) {
       const newState = [...this.state.data]
-      const changedState = newState.map((el: DataType) => {
+      const changedState = newState.map(el => {
         if (el.id === payload) {
           el.isDisable = false
           return el
@@ -72,7 +72,7 @@ export default new Vuex.Store({
     },
     saveItem: async function ({ commit }, payload) {
       const newState = [...this.state.data]
-      const changedItem = newState.find((el: DataType) => el.id === payload) as DataType
+      const changedItem = newState.find(el => el.id === payload)
       try {
         const response = await fetch('http://localhost:8118/api/update', {
           method: 'PATCH',
@@ -83,7 +83,7 @@ export default new Vuex.Store({
         })
         const result = await response.json() as Response
         const user = result.data
-        const changedState = newState.map((el: DataType) => {
+        const changedState = newState.map(el => {
           if (el.id === user.id) {
             el.name = user.name
             el.age = user.age
@@ -109,8 +109,7 @@ export default new Vuex.Store({
           }
         })
         const result = await response.json() as Response
-        let user = {} as DataType
-        user = result.data
+        const user = result.data
         user.isDisable = true
         newState.push(user)
         payload = newState
@@ -133,7 +132,7 @@ export default new Vuex.Store({
         const id = result.id
         const message = result.message
         if (message === 'deleted') {
-          const changedState = newState.filter((el: DataType) => el.id !== id) as Array<DataType>
+          const changedState = newState.filter(el => el.id !== id)
           payload = changedState
         }
         commit('REMOVE_ITEM', payload)
