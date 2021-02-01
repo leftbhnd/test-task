@@ -1,22 +1,73 @@
 <template>
   <div>
-    <TableComponent />
+    Тестовое здание
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Age</th>
+          <th>Address</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(item) in getData" :key="item.id">
+          <td><input v-model="item.name" :disabled="item.isDisable"/></td>
+          <td><input v-model="item.age" :disabled="item.isDisable"/></td>
+          <td><input v-model="item.address" :disabled="item.isDisable"/></td>
+          <td><button v-show="item.isDisable" @click="change(item.id)">Change</button></td>
+          <td><button v-show="!item.isDisable" @click="save(item.id)">Save</button></td>
+          <td><button @click="remove(item.id)">Delete</button></td>
+        </tr>
+        <tr>
+          <td><input v-model="newItemName" type="text"></td>
+          <td><input v-model="newItemAge" type="text"></td>
+          <td><input v-model="newItemAddress" type="text"></td>
+          <td><button @click="add">Add Item</button></td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
 <script>
-import TableComponent from './components/TableComponent.vue'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'app',
   data () {
-    return {}
+    return {
+      newItemName: '',
+      newItemAge: '',
+      newItemAddress: ''
+    }
   },
-  components: {
-    TableComponent
+  computed: {
+    ...mapGetters(['getData'])
+  },
+  methods: {
+    ...mapActions(['changeItem', 'saveItem', 'addItem', 'removeItem']),
+    change: function (id) {
+      this.$store.dispatch('changeItem', id)
+    },
+    save: function (id) {
+      this.$store.dispatch('saveItem', id)
+    },
+    add: function () {
+      this.$store.dispatch('addItem', {
+        name: this.newItemName,
+        age: this.newItemAge,
+        address: this.newItemAddress
+      })
+      this.newItemName = ''
+      this.newItemAge = ''
+      this.newItemAddress = ''
+    },
+    remove: function (id) {
+      this.$store.dispatch('removeItem', { id: id })
+    }
   }
 }
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 </style>
