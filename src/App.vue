@@ -15,7 +15,9 @@
       <tbody>
         <tr v-for="user in filtredUsers" :key="user.id">
           <td><input v-model="user.name" :disabled="user.isDisable" /></td>
-          <td><input v-model="user.description" :disabled="user.isDisable" /></td>
+          <td>
+            <input v-model="user.description" :disabled="user.isDisable" />
+          </td>
           <td><input v-model="user.address" :disabled="user.isDisable" /></td>
           <td>
             <button v-show="user.isDisable" @click="change(user.id)">
@@ -61,6 +63,9 @@ export default {
           if (el.name.includes(this.findUser)) {
             return el.name.includes(this.findUser)
           }
+          if (el.description.includes(this.findUser)) {
+            return el.description.includes(this.findUser)
+          }
           if (el.address.includes(this.findUser)) {
             return el.address.includes(this.findUser)
           }
@@ -71,10 +76,10 @@ export default {
   methods: {
     ...mapActions(['changeUser', 'saveUser', 'addUser', 'removeUser']),
     change: function (id) {
-      this.$store.dispatch('changeUser', id)
+      this.$store.dispatch('changeUser', { id: id })
     },
     save: function (id) {
-      this.$store.dispatch('saveUser', id)
+      this.$store.dispatch('saveUser', { id: id })
     },
     add: function () {
       this.$store.dispatch('addUser', {
