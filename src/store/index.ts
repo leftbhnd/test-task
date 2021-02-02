@@ -6,20 +6,15 @@ Vue.use(Vuex)
 
 interface DataType {
   name: string;
-  age: number;
+  description: string;
   address: string;
   id: number;
   isDisable: boolean;
 }
 
 interface Response {
-  data: {
-    name: string;
-    age: number;
-    address: string;
-    id: number;
-    isDisable: boolean;
-  };
+  item: DataType;
+  payload: Array<DataType>;
   message: string;
   id: number;
   description: string;
@@ -28,22 +23,22 @@ interface Response {
 
 export default new Vuex.Store({
   state: {
-    data: [] as Array<DataType>
+    data: [] as Response['payload']
   },
   mutations: {
-    GET_USERS: function (state, payload) {
+    GET_USERS: function (state, payload: Response['payload']) {
       state.data = payload
     },
-    CHANGE_USER: function (state, payload) {
+    CHANGE_USER: function (state, payload: Response['payload']) {
       state.data = payload
     },
-    SAVE_USER: function (state, payload) {
+    SAVE_USER: function (state, payload: Response['payload']) {
       state.data = payload
     },
-    ADD_USER: function (state, payload) {
+    ADD_USER: function (state, payload: Response['payload']) {
       state.data = payload
     },
-    REMOVE_USER: function (state, payload) {
+    REMOVE_USER: function (state, payload: Response['payload']) {
       state.data = payload
     }
   },
@@ -51,13 +46,13 @@ export default new Vuex.Store({
     getDataFromBack: async function ({ commit }) {
       try {
         const response = await fetch('http://localhost:8118/api/users')
-        let payload = await response.json()
-        if (payload.success === true) {
-          payload = payload.data.map((el: DataType) => {
+        const data = await response.json() as Response
+        if (data.success === true) {
+          const users = data.payload.map(el => {
             el.isDisable = true
             return el
           })
-          commit('GET_USERS', payload)
+          commit('GET_USERS', users)
         } else console.error('cannot get users')
       } catch (error) {
         console.error(error)
@@ -65,18 +60,17 @@ export default new Vuex.Store({
     },
     changeUser: function ({ commit }, payload) {
       const newState = [...this.state.data]
-      const changedState = newState.map(el => {
+      const users = newState.map(el => {
         if (el.id === payload) {
           el.isDisable = false
           return el
         } else return el
       })
-      payload = changedState
-      commit('CHANGE_USER', payload)
+      commit('CHANGE_USER', users)
     },
-    saveUser: async function ({ commit }, payload) {
+    saveUser: async function ({ commit }, payload: number) {
       const newState = [...this.state.data]
-      const changedItem = newState.find(el => el.id === payload)
+      const changedItem = newState.find(el => el.id === payload) as DataType
       try {
         const response = await fetch('http://localhost:8118/api/update', {
           method: 'PATCH',
@@ -87,24 +81,23 @@ export default new Vuex.Store({
         })
         const result = (await response.json()) as Response
         if (result.message === 'success') {
-          const user = result.data
-          const changedState = newState.map(el => {
+          const user = result.item
+          const users = newState.map(el => {
             if (el.id === user.id) {
               el.name = user.name
-              el.age = user.age
+              el.description = user.description
               el.address = user.address
               el.isDisable = true
               return el
             } else return el
           })
-          payload = changedState
-          commit('SAVE_USER', payload)
+          commit('SAVE_USER', users)
         } else console.error('user cannot be changed')
       } catch (error) {
         console.error(error)
       }
     },
-    addUser: async function ({ commit }, payload) {
+    addUser: async function ({ commit }, payload: DataType) {
       const newState = [...this.state.data]
       try {
         const response = await fetch('http://localhost:8118/api/user', {
@@ -116,17 +109,16 @@ export default new Vuex.Store({
         })
         const result = (await response.json()) as Response
         if (result.message === 'success') {
-          const user = result.data
+          const user = result.item
           user.isDisable = true
           newState.push(user)
-          payload = newState
-          commit('ADD_USER', payload)
+          commit('ADD_USER', newState)
         } else console.error('cannot add user')
       } catch (error) {
         console.error(error)
       }
     },
-    removeUser: async function ({ commit }, payload) {
+    removeUser: async function ({ commit }, payload: {id: number}) {
       const newState = [...this.state.data]
       try {
         const response = await fetch('http://localhost:8118/api/delete', {
@@ -140,10 +132,9 @@ export default new Vuex.Store({
         const id = result.id
         const message = result.message
         if (message === 'deleted') {
-          const changedState = newState.filter(el => el.id !== id)
-          payload = changedState
+          const users = newState.filter(el => el.id !== id)
+          commit('REMOVE_USER', users)
         } else console.error('cannot delete item')
-        commit('REMOVE_USER', payload)
       } catch (error) {
         console.error(error)
       }
