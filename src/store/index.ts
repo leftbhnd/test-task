@@ -58,19 +58,19 @@ export default new Vuex.Store({
         console.error(error)
       }
     },
-    changeUser: function ({ commit }, payload) {
+    changeUser: function ({ commit }, payload: {id: number}) {
       const newState = [...this.state.data]
       const users = newState.map(el => {
-        if (el.id === payload) {
+        if (el.id === payload.id) {
           el.isDisable = false
           return el
         } else return el
       })
       commit('CHANGE_USER', users)
     },
-    saveUser: async function ({ commit }, payload: number) {
+    saveUser: async function ({ commit }, payload: {id: number}) {
       const newState = [...this.state.data]
-      const changedItem = newState.find(el => el.id === payload) as DataType
+      const changedItem = newState.find(el => el.id === payload.id) as DataType
       try {
         const response = await fetch('http://localhost:8118/api/update', {
           method: 'PATCH',
@@ -97,7 +97,7 @@ export default new Vuex.Store({
         console.error(error)
       }
     },
-    addUser: async function ({ commit }, payload: DataType) {
+    addUser: async function ({ commit }, payload: {id: number}) {
       const newState = [...this.state.data]
       try {
         const response = await fetch('http://localhost:8118/api/user', {
