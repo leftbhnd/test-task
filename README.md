@@ -1,29 +1,28 @@
 # test-task
 
-## Project setup
+## Установка проекта
 ```
-npm install
+npm i
 ```
 
-### Compiles and hot-reloads for development
+### Запуск проекта
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
-```
-npm run build
-```
 
-### Run your unit tests
-```
-npm run test:unit
-```
-
-### Lints and fixes files
+### Проверить код а стилистические ошибки
 ```
 npm run lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Структу папок
+```
+backend - папка с бэкэндом
+```
+```
+src - Папка с проектом
+```
+```
+store - Файл *.ts содержащий управление и хранение данными
+```
