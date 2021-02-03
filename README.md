@@ -5,6 +5,13 @@
 npm i
 ```
 
+
+## Запуск бэка
+```
+node ./backend/server.js
+```
+
+
 ## Запуск проекта
 ```
 npm run serve
