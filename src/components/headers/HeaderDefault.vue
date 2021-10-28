@@ -1,56 +1,49 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 <template>
-  <header class="header">
-    <div class="container">
-      <div class="header__row">
-        <section v-if="searchState" class="header__search enabled">
-          <div class="search">
-            <Icon :src="search" />
-          </div>
-          <input
-            type="text"
-            class="enabled__input"
-            ref="searchFocus"
-            v-model="searchValue"
-          />
-          <button
-            class="enabled__clear"
-            @click="clearInput"
-            v-show="searchValue.length"
-          >
-            <div class="clear">
-              <Icon :src="clear" />
-            </div>
-          </button>
-          <button class="enabled__cancel" @click="hideSearch">
-            <p class="cancel">Отмена</p>
-          </button>
-        </section>
-        <section v-else class="header__search disabled">
-          <div class="disabled__title">
-            <p>Folder 31-190</p>
-          </div>
-          <button class="disabled__search" @click="showSearch">
-            <div class="search">
-              <Icon :src="search" />
-            </div>
-          </button>
-        </section>
-        <button class="header__add">
-          <div class="add">
-            <Icon :src="add" />
-            <p class="add__label">Добавить пользователя</p>
-          </div>
+  <header class="header-default container">
+    <div class="header-default__row">
+      <section v-if="searchState" class="header-default__search enabled">
+        <div class="enabled__search">
+          <Icon :src="search" />
+        </div>
+        <input
+          class="enabled__input"
+          type="text"
+          ref="searchFocus"
+          v-model="searchValue"
+        />
+        <button
+          class="enabled__clear"
+          @click="clearInput"
+          v-show="searchValue.length"
+        >
+          <Icon :src="clear" />
         </button>
-      </div>
+        <button class="enabled__cancel" @click="hideSearch">
+          Отмена
+        </button>
+      </section>
+      <section v-else class="header-default__search disabled">
+        <div class="disabled__title">
+          Folder 31-190
+        </div>
+        <button class="disabled__search" @click="showSearch">
+          <Icon :src="search" />
+        </button>
+      </section>
+      <button class="header-default__add" @click="addNewUser">
+        <Icon :src="add" />
+        <span>Добавить пользователя</span>
+      </button>
     </div>
   </header>
 </template>
 
 <script lang="js">
-import Icon from '@/components/blocks/IconWrapper.vue'
+import Icon from '@/components/default/IconWrapper.vue'
+import { mapActions } from 'vuex'
 export default {
-  name: 'Header',
+  name: 'HeaderDefault',
   components: {
     Icon
   },
@@ -72,6 +65,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['changeNewUserState']),
     showSearch () {
       this.searchState = true
       setTimeout(() => {
@@ -87,122 +81,130 @@ export default {
       setTimeout(() => {
         this.$refs.searchFocus.focus()
       }, 100)
+    },
+    addNewUser () {
+      this.$store.dispatch('changeNewUserState', true)
     }
   }
 }
 </script>
 
 <style lang="scss">
-.header {
+.header-default {
+  width: 100%;
+
   background-color: #ffffff;
   &__row {
-    height: 48px;
     display: flex;
-    flex-direction: row;
     justify-content: space-between;
-  }
-  &__add {
-    background-color: #316bff;
-    flex: 0 0 225px;
-  }
-  &__add :hover {
-    background-color: #1049dc;
+
+    height: 48px;
   }
   &__search {
     display: flex;
     flex: 0 1 1215px;
+
     background-color: #ffffff;
+  }
+  &__add {
+    display: flex;
+    align-items: center;
+    flex: 0 0 225px;
+    justify-content: space-between;
+
+    padding-right: 12px;
+    padding-left: 15px;
+
+    color: #ffffff;
+    background-color: #316bff;
+
+    font-family: IBM Plex Mono;
+    font-size: 14px;
+    font-weight: 500;
+    font-style: normal;
+    line-height: 16px;
+  }
+  &__add:hover {
+    background-color: #1049dc;
   }
 }
 .disabled {
-  display: flex;
-  align-items: center;
   &__title {
+    display: flex;
+    align-items: center;
     flex: 1 1 1167px;
-    font-family: Work Sans;
-    font-style: normal;
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 16px;
+
+    padding-left: 16px;
+
     color: #1f232e;
+
+    font-family: Work Sans;
+    font-size: 14px;
+    font-weight: 500;
+    font-style: normal;
+    line-height: 16px;
   }
   &__search {
-    height: 100%;
+    width: 48px;
+    height: 48px;
+
     background-color: #ffffff;
   }
-  &__search :hover {
+  &__search:hover {
     background-color: #f0f2f4;
-    color: #1f232e;
   }
 }
 .enabled {
-  display: flex;
-  align-items: center;
   &__search {
-    background-color: #ffffff;
+    display: flex;
+    align-items: center;
     flex: 0 0 48px;
+    justify-content: center;
+
+    background-color: #ffffff;
   }
   &__input {
+    display: flex;
+    align-items: center;
     flex: 1 1 990px;
-    font-family: Work Sans;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 16px;
-    color: #1f232e;
+
     height: 100%;
+
+    color: #1f232e;
+
+    font-family: Work Sans;
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    line-height: 16px;
   }
   &__clear {
-    height: 100%;
-    background-color: #ffffff;
     flex: 0 0 48px;
+
+    background-color: #ffffff;
   }
   &__cancel {
     display: flex;
-    background-color: #ffffff;
-    flex: 0 0 83px;
+    align-items: center;
+    flex: 0 0 84px;
+    justify-content: center;
+
+    width: 100%;
     height: 48px;
+
+    color: #7b8395;
     border-left: 2px solid #f0f2f4;
-  }
-  &__cancel :hover {
-    background-color: #f0f2f4;
-    color: #1f232e;
-  }
-}
-.search {
-  width: 48px;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.cancel {
-  font-family: IBM Plex Mono;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 16px;
-  color: #7b8395;
-  height: 100%;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.add {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  padding: 0 16px;
-  &__label {
-    padding: 0 8px;
+    background-color: #ffffff;
+
     font-family: IBM Plex Mono;
-    font-style: normal;
-    font-weight: 500;
     font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
     line-height: 16px;
-    color: #ffffff;
+  }
+  &__cancel:hover {
+    color: #1f232e;
+    background-color: #f0f2f4;
   }
 }
 </style>
