@@ -1,20 +1,20 @@
 <template>
   <div id="app">
     <HeaderWrapper />
-    <Main class="content" />
+    <TableWrapper class="content" />
     <Footer />
   </div>
 </template>
 
 <script lang="ts">
-import HeaderWrapper from '@/components/HeaderWrapper.vue'
-import Main from '@/components/Main.vue'
+import HeaderWrapper from '@/components/wrappers/HeaderWrapper.vue'
+import TableWrapper from '@/components/wrappers/TableWrapper.vue'
 import Footer from '@/components/Footer.vue'
 export default {
   name: 'App',
   components: {
     HeaderWrapper,
-    Main,
+    TableWrapper,
     Footer
   }
 }
