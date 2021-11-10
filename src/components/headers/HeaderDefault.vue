@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 <template>
-  <header class="header-default container">
-    <div class="header-default__row">
+  <div>
+    <HeaderEdit v-if="getNewUserState" :title="title" />
+    <header class="header-default container" v-else>
       <section v-if="searchState" class="header-default__search enabled">
         <div class="enabled__search">
           <Icon :src="search" />
@@ -35,25 +35,29 @@
         <Icon :src="add" />
         <span>Добавить пользователя</span>
       </button>
-    </div>
-  </header>
+    </header>
+  </div>
 </template>
 
-<script lang="js">
+<script lang="ts">
 import Icon from '@/components/default/IconWrapper.vue'
-import { mapActions } from 'vuex'
+import HeaderEdit from '@/components/headers/HeaderEdit.vue'
+import { mapGetters, mapActions } from 'vuex'
 export default {
   name: 'HeaderDefault',
   components: {
+    HeaderEdit,
     Icon
   },
   data () {
     return {
+      title: 'Добавление нового пользователя',
       searchState: false,
       searchValue: ''
     }
   },
   computed: {
+    ...mapGetters(['getNewUserState']),
     add () {
       return require('@/assets/svg/add.svg')
     },
@@ -65,7 +69,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['changeNewUserState']),
+    ...mapActions(['newUserObserver']),
     showSearch () {
       this.searchState = true
       setTimeout(() => {
@@ -83,7 +87,7 @@ export default {
       }, 100)
     },
     addNewUser () {
-      this.$store.dispatch('changeNewUserState', true)
+      this.$store.dispatch('newUserObserver', true)
     }
   }
 }
@@ -91,15 +95,13 @@ export default {
 
 <style lang="scss">
 .header-default {
+  display: flex;
+  justify-content: space-between;
+
   width: 100%;
+  height: 48px;
 
   background-color: #ffffff;
-  &__row {
-    display: flex;
-    justify-content: space-between;
-
-    height: 48px;
-  }
   &__search {
     display: flex;
     flex: 0 1 1215px;
