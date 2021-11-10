@@ -2,11 +2,11 @@
   <img :src="src" :style="{ transform: 'rotate(' + degree + 'deg)' }" />
 </template>
 
-<script lang="js">
+<script lang="ts">
 export default {
   name: 'Icon',
   props: {
-    src: { type: String, require: true },
+    src: { type: String },
     degree: { type: String, default: '0' }
   }
 }
