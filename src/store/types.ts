@@ -1,8 +1,8 @@
 export interface IUser {
   name: string
-  phone: number
+  phone: number|string
   email: string
   registration: string
-  code: number
+  code: number|string
   city: string
 }
