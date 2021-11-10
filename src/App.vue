@@ -1,19 +1,19 @@
 <template>
   <div id="app">
-    <Header />
+    <HeaderWrapper />
     <Main class="content" />
     <Footer />
   </div>
 </template>
 
 <script lang="ts">
-import Header from '@/components/HeaderWrapper.vue'
+import HeaderWrapper from '@/components/HeaderWrapper.vue'
 import Main from '@/components/Main.vue'
 import Footer from '@/components/Footer.vue'
 export default {
   name: 'App',
   components: {
-    Header,
+    HeaderWrapper,
     Main,
     Footer
   }
