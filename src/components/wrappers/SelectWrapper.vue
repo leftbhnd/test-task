@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts">
-import Icon from '@/components/default/IconWrapper.vue'
+import Icon from '@/components/wrappers/IconWrapper.vue'
 
 export default {
   name: 'Select',

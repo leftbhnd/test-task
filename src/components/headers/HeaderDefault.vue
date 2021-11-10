@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts">
-import Icon from '@/components/default/IconWrapper.vue'
+import Icon from '@/components/wrappers/IconWrapper.vue'
 import HeaderEdit from '@/components/headers/HeaderEdit.vue'
 import { mapGetters, mapActions } from 'vuex'
 export default {

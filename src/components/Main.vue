@@ -61,7 +61,7 @@
           <input class="trow__label edit-input" type="text" v-model="newCity" />
         </td>
       </tr>
-      <TableRow
+      <TableRowWrapper
         v-for="(user, index) in getUsers"
         :key="index"
         :user="user"
@@ -73,12 +73,12 @@
 
 <script lang="ts">
 import { mapActions, mapGetters } from 'vuex'
-import TableRow from '@/components/default/TableRow.vue'
+import TableRowWrapper from '@/components/wrappers/TableRowWrapper.vue'
 
 export default {
   name: 'Main',
   components: {
-    TableRow
+    TableRowWrapper
   },
   data () {
     return {

@@ -34,8 +34,8 @@
 </template>
 
 <script lang="ts">
-import Icon from '@/components/default/IconWrapper.vue'
-import Select from '@/components/default/SelectWrapper.vue'
+import Icon from '@/components/wrappers/IconWrapper.vue'
+import Select from '@/components/wrappers/SelectWrapper.vue'
 import { mapGetters } from 'vuex'
 export default {
   name: 'Footer',
