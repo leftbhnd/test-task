@@ -89,7 +89,8 @@ export default new Vuex.Store({
       city: ''
     } as IUser,
     newUserState: false,
-    saveEventState: false
+    saveEventState: false,
+    selectState: false
   },
   mutations: {
     NEW_USER_OBSERVER (state, payload: boolean) {
@@ -103,6 +104,9 @@ export default new Vuex.Store({
     },
     SAVE_EVENT_OBSERVER (state, payload: boolean) {
       state.saveEventState = payload
+    },
+    SELECT_EVENT_OBSERVER (state, payload: boolean) {
+      state.selectState = payload
     }
   },
   actions: {
@@ -118,6 +122,9 @@ export default new Vuex.Store({
     },
     saveEventObserver ({ commit }, payload: boolean) {
       commit('SAVE_EVENT_OBSERVER', payload)
+    },
+    selectEventObserver ({ commit }, payload: boolean) {
+      commit('SELECT_EVENT_OBSERVER', payload)
     }
   },
   getters: {
@@ -129,6 +136,9 @@ export default new Vuex.Store({
     },
     getSaveEvent (state): boolean {
       return state.saveEventState
+    },
+    getSelectState (state): boolean {
+      return state.selectState
     }
   }
 })
