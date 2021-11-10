@@ -6,7 +6,7 @@
     <td class="trow__name">
       <input
         disabled="disabled"
-        class="trow__label user-input"
+        class="row-input"
         type="text"
         :value="user.name"
       />
@@ -14,7 +14,7 @@
     <td class="trow__phone">
       <input
         disabled="disabled"
-        class="trow__label user-input"
+        class="row-input"
         type="text"
         :value="user.phone"
       />
@@ -22,7 +22,7 @@
     <td class="trow__email">
       <input
         disabled="disabled"
-        class="trow__label user-input"
+        class="row-input"
         type="text"
         :value="user.email"
       />
@@ -30,7 +30,7 @@
     <td class="trow__registration">
       <input
         disabled="disabled"
-        class="trow__label user-input"
+        class="row-input"
         type="text"
         :value="user.registration"
       />
@@ -38,7 +38,7 @@
     <td class="trow__code">
       <input
         disabled="disabled"
-        class="trow__label user-input"
+        class="row-input"
         type="text"
         :value="user.code"
       />
@@ -46,7 +46,7 @@
     <td class="trow__city">
       <input
         disabled="disabled"
-        class="trow__label user-input"
+        class="row-input"
         type="text"
         :value="user.city"
       />
@@ -59,12 +59,13 @@ import { mapGetters, mapActions } from 'vuex'
 import IconWrapper from '@/components/wrappers/IconWrapper.vue'
 
 export default {
-  name: 'TableRowWrapper',
+  name: 'UserRow',
   components: {
     IconWrapper
   },
   props: {
-    user: Object
+    user: Object,
+    id: Number
   },
   data () {
     return {
@@ -97,9 +98,9 @@ export default {
   watch: {
     checked () {
       if (this.checked) {
-        this.$store.dispatch('selectEventObserver', true)
+        console.log(111)
       } else {
-        this.$store.dispatch('selectEventObserver', false)
+        console.log(222)
       }
     }
   }
@@ -107,7 +108,4 @@ export default {
 </script>
 
 <style lang="scss">
-.checkbox {
-  cursor: pointer;
-}
 </style>
