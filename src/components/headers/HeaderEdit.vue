@@ -28,7 +28,9 @@ export default {
     },
     saveNewUser () {
       this.$store.dispatch('saveEventObserver', true)
-      this.$store.dispatch('newUserObserver', false)
+      this.$nextTick(() => {
+        this.$store.dispatch('newUserObserver', false)
+      })
     }
   }
 }
