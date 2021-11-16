@@ -13,7 +13,8 @@ export default new Vuex.Store({
         email: 'd@p.ru',
         registration: '01.11.1999',
         code: 1,
-        city: 'Perm'
+        city: 'Perm',
+        id: 0
       },
       {
         name: 'Дима',
@@ -21,7 +22,8 @@ export default new Vuex.Store({
         email: 'd@p.ru',
         registration: '01.11.1999',
         code: 2,
-        city: 'Perm'
+        city: 'Perm',
+        id: 1
       },
       {
         name: 'Дима',
@@ -29,7 +31,8 @@ export default new Vuex.Store({
         email: 'd@p.ru',
         registration: '01.11.1999',
         code: 3,
-        city: 'Perm'
+        city: 'Perm',
+        id: 2
       },
       {
         name: 'Дима',
@@ -37,7 +40,8 @@ export default new Vuex.Store({
         email: 'd@p.ru',
         registration: '01.11.1999',
         code: 4,
-        city: 'Perm'
+        city: 'Perm',
+        id: 3
       },
       {
         name: 'Дима',
@@ -45,7 +49,8 @@ export default new Vuex.Store({
         email: 'd@p.ru',
         registration: '01.11.1999',
         code: 5,
-        city: 'Perm'
+        city: 'Perm',
+        id: 4
       },
       {
         name: 'Дима',
@@ -53,7 +58,8 @@ export default new Vuex.Store({
         email: 'd@p.ru',
         registration: '01.11.1999',
         code: 6,
-        city: 'Perm'
+        city: 'Perm',
+        id: 5
       },
       {
         name: 'Дима',
@@ -61,7 +67,8 @@ export default new Vuex.Store({
         email: 'd@p.ru',
         registration: '01.11.1999',
         code: 7,
-        city: 'Perm'
+        city: 'Perm',
+        id: 6
       },
       {
         name: 'Дима',
@@ -69,7 +76,8 @@ export default new Vuex.Store({
         email: 'd@p.ru',
         registration: '01.11.1999',
         code: 8,
-        city: 'Perm'
+        city: 'Perm',
+        id: 7
       },
       {
         name: 'Дима',
@@ -77,7 +85,8 @@ export default new Vuex.Store({
         email: 'd@p.ru',
         registration: '01.11.1999',
         code: 12,
-        city: 'Perm'
+        city: 'Perm',
+        id: 8
       }
     ] as IUser[],
     newUser: {
@@ -85,12 +94,15 @@ export default new Vuex.Store({
       phone: '',
       email: '',
       registration: '',
-      code: '',
-      city: ''
+      code: null,
+      city: '',
+      id: null
     } as IUser,
+    selected: [] as IUser[],
     newUserState: false,
     saveEventState: false,
-    selectState: false
+    editState: false,
+    selectAllState: false
   },
   mutations: {
     NEW_USER_OBSERVER (state, payload: boolean) {
@@ -105,15 +117,28 @@ export default new Vuex.Store({
     SAVE_EVENT_OBSERVER (state, payload: boolean) {
       state.saveEventState = payload
     },
-    SELECT_EVENT_OBSERVER (state, payload: boolean) {
-      state.selectState = payload
+    SELECT_USER (state, payload: IUser) {
+      state.selected.push(payload)
+    },
+    REMOVE_SELECTION (state, payload: IUser[]) {
+      state.selected = payload
+    },
+    CANCEL_SELECTION (state) {
+      state.selected = []
+      state.selectAllState = false
+    },
+    SELECT_ALL_OBSERVER (state, payload: boolean) {
+      state.selectAllState = payload
     }
   },
   actions: {
     newUserObserver ({ commit }, payload: boolean): void {
       commit('NEW_USER_OBSERVER', payload)
     },
-    newUserWatcher ({ commit }, payload: { type: keyof IUser, data: string }): void {
+    newUserWatcher (
+      { commit },
+      payload: { type: keyof IUser; data: string | number }
+    ): void {
       this.state.newUser[payload.type] = payload.data
       commit('NEW_USER_WATCHER', this.state.newUser)
     },
@@ -123,8 +148,20 @@ export default new Vuex.Store({
     saveEventObserver ({ commit }, payload: boolean) {
       commit('SAVE_EVENT_OBSERVER', payload)
     },
-    selectEventObserver ({ commit }, payload: boolean) {
-      commit('SELECT_EVENT_OBSERVER', payload)
+    selectUser ({ commit }, payload: IUser) {
+      commit('SELECT_USER', payload)
+    },
+    removeSelection ({ commit }, payload: number) {
+      const updated = this.state.selected.filter(user => {
+        return user.id !== payload
+      })
+      commit('REMOVE_SELECTION', updated)
+    },
+    cancelSelection ({ commit }) {
+      commit('CANCEL_SELECTION')
+    },
+    selectAllObserver ({ commit }, payload: boolean) {
+      commit('SELECT_ALL_OBSERVER', payload)
     }
   },
   getters: {
@@ -137,8 +174,14 @@ export default new Vuex.Store({
     getSaveEvent (state): boolean {
       return state.saveEventState
     },
-    getSelectState (state): boolean {
-      return state.selectState
+    getSelectedUsers (state): IUser[] {
+      return state.selected
+    },
+    getSelectAllState (state): boolean {
+      return state.selectAllState
+    },
+    getEditState (state): boolean {
+      return state.editState
     }
   }
 })

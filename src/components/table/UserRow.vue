@@ -1,7 +1,7 @@
 <template>
   <tr>
     <td class="trow__checkbox" @click="check" :style="isNewUser">
-      <IconWrapper class="checkbox" :src="checkbox" />
+      <IconWrapper class="checkbox" :src="checkboxState" />
     </td>
     <td class="trow__name">
       <input
@@ -67,21 +67,21 @@ export default {
     user: Object,
     id: Number
   },
-  data () {
+  data (): { checked: boolean } {
     return {
       checked: false
     }
   },
   computed: {
-    ...mapGetters(['getNewUserState']),
-    checkbox () {
+    ...mapGetters(['getNewUserState', 'getSelectedUsers', 'getSelectAllState']),
+    checkboxState (): string {
       if (this.checked) {
         return require('@/assets/svg/checked.svg')
       } else {
         return require('@/assets/svg/unchecked.svg')
       }
     },
-    isNewUser () {
+    isNewUser (): string {
       if (this.getNewUserState) {
         return 'pointer-events: none;'
       } else {
@@ -90,22 +90,33 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['selectEventObserver']),
-    check () {
+    ...mapActions(['selectEventObserver', 'selectUser', 'removeSelection']),
+    check (): void {
       this.checked = !this.checked
     }
   },
   watch: {
-    checked () {
+    checked (): void {
       if (this.checked) {
-        console.log(111)
+        this.$store.dispatch('selectUser', this.user)
       } else {
-        console.log(222)
+        this.$store.dispatch('removeSelection', this.id)
+      }
+    },
+    getSelectedUsers (): void {
+      if (!this.getSelectedUsers.length) {
+        this.checked = false
+      }
+    },
+    getSelectAllState (): void {
+      if (this.getSelectAllState) {
+        this.checked = true
+      } else {
+        this.checked = false
       }
     }
   }
 }
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

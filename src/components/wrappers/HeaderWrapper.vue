@@ -1,14 +1,14 @@
 <template>
   <div>
-    <HeaderSelect v-if="getSelectState"/>
+    <HeaderSelect v-if="getSelectedUsers.length" />
     <HeaderDefault v-else />
   </div>
 </template>
 
 <script lang="ts">
+import { mapGetters } from 'vuex'
 import HeaderDefault from '@/components/headers/HeaderDefault.vue'
 import HeaderSelect from '@/components/headers/HeaderSelect.vue'
-import { mapGetters } from 'vuex'
 export default {
   name: 'HeaderWrapper',
   components: {
@@ -16,7 +16,7 @@ export default {
     HeaderSelect
   },
   computed: {
-    ...mapGetters(['getSelectState'])
+    ...mapGetters(['getSelectedUsers'])
   }
 }
 </script>
