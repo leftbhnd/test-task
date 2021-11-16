@@ -30,6 +30,7 @@
 
 <script lang="ts">
 import { mapGetters, mapActions } from 'vuex'
+import { IUser } from '@/store/types'
 import IconWrapper from '@/components/wrappers/IconWrapper.vue'
 
 export default {
@@ -37,19 +38,20 @@ export default {
   components: {
     IconWrapper
   },
-  data () {
+  data (): IUser {
     return {
-      newName: '',
-      newPhone: '',
-      newEmail: '',
-      newRegistration: '',
-      newCode: '',
-      newCity: ''
+      name: '',
+      phone: '',
+      email: '',
+      registration: '',
+      code: null,
+      city: '',
+      id: null
     }
   },
   computed: {
-    ...mapGetters(['getSaveEvent']),
-    checkbox () {
+    ...mapGetters(['getSaveEvent', 'getUsers']),
+    checkbox (): string {
       return require('@/assets/svg/unchecked.svg')
     }
   },
@@ -57,65 +59,67 @@ export default {
     ...mapActions(['saveEventObserver', 'newUserWatcher', 'addNewUser'])
   },
   watch: {
-    getSaveEvent () {
+    getSaveEvent (): void {
       if (this.getSaveEvent) {
         this.$store.dispatch('addNewUser', {
-          name: this.newName,
-          phone: this.newPhone,
-          email: this.newEmail,
-          registration: this.newRegistration,
-          code: this.newCode,
-          city: this.newCity
+          name: this.name,
+          phone: this.phone,
+          email: this.email,
+          registration: this.registration,
+          code: this.code,
+          city: this.city,
+          id: this.getUsers.length
         })
         this.$nextTick(() => {
           this.$store.dispatch('saveEventObserver', false)
         })
       }
     },
-    getNewUserState () {
+    getNewUserState (): void {
       if (!this.getNewUserState) {
-        this.newName = ''
-        this.newPhone = ''
-        this.newEmail = ''
-        this.newRegistration = ''
-        this.newCode = ''
-        this.newCity = ''
+        this.name = ''
+        this.phone = ''
+        this.email = ''
+        this.registration = ''
+        this.code = ''
+        this.city = ''
+        this.id = null
       }
     },
-    newName () {
+    newName (): void {
       this.$store.dispatch('newUserWatcher', {
         type: 'name',
-        data: this.newName
+        data: this.name
       })
     },
-    newPhone () {
+    newPhone (): void {
       this.$store.dispatch('newUserWatcher', {
         type: 'phone',
-        data: this.newPhone
+        data: this.phone
       })
     },
-    newEmail () {
+    newEmail (): void {
       this.$store.dispatch('newUserWatcher', {
         type: 'email',
-        data: this.newEmail
+        data: this.email
       })
     },
-    newRegistration () {
+    newRegistration (): void {
       this.$store.dispatch('newUserWatcher', {
         type: 'registration',
-        data: this.newRegistration
+        data: this.registration
       })
     },
-    newCode () {
+    newCode (): void {
       this.$store.dispatch('newUserWatcher', {
         type: 'code',
-        data: this.newCode
+        data: this.code
       })
     },
-    newCity () {
+    newCity (): void {
       this.$store.dispatch('newUserWatcher', {
         type: 'city',
-        data: this.newCity
+        data: this.city
       })
     }
   }

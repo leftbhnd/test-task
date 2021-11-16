@@ -1,6 +1,6 @@
 <template>
   <div>
-    <HeaderEdit v-if="getNewUserState" :title="title" />
+    <HeaderEdit v-if="getNewUserState" :type="type" />
     <header class="header-default container" v-else>
       <section v-if="searchState" class="header-default__search enabled">
         <div class="enabled__search">
@@ -19,14 +19,10 @@
         >
           <Icon :src="clear" />
         </button>
-        <button class="enabled__cancel" @click="hideSearch">
-          Отмена
-        </button>
+        <button class="enabled__cancel" @click="hideSearch">Отмена</button>
       </section>
       <section v-else class="header-default__search disabled">
-        <div class="disabled__title">
-          Folder 31-190
-        </div>
+        <div class="disabled__title">Folder 31-190</div>
         <button class="disabled__search" @click="showSearch">
           <Icon :src="search" />
         </button>
@@ -49,44 +45,44 @@ export default {
     HeaderEdit,
     Icon
   },
-  data () {
+  data (): { type: string; searchState: boolean; searchValue: string } {
     return {
-      title: 'Добавление нового пользователя',
+      type: 'new',
       searchState: false,
       searchValue: ''
     }
   },
   computed: {
     ...mapGetters(['getNewUserState']),
-    add () {
+    add (): string {
       return require('@/assets/svg/add.svg')
     },
-    search () {
+    search (): string {
       return require('@/assets/svg/search.svg')
     },
-    clear () {
+    clear (): string {
       return require('@/assets/svg/clear.svg')
     }
   },
   methods: {
     ...mapActions(['newUserObserver']),
-    showSearch () {
+    showSearch (): void {
       this.searchState = true
       setTimeout(() => {
         this.$refs.searchFocus.focus()
       }, 100)
     },
-    hideSearch () {
+    hideSearch (): void {
       this.searchState = false
       this.searchValue = ''
     },
-    clearInput () {
+    clearInput (): void {
       this.searchValue = ''
       setTimeout(() => {
         this.$refs.searchFocus.focus()
       }, 100)
     },
-    addNewUser () {
+    addNewUser (): void {
       this.$store.dispatch('newUserObserver', true)
     }
   }

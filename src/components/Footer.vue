@@ -1,9 +1,7 @@
 <template>
   <footer class="footer container">
     <section class="footer__item-user">
-      <span class="footer__show-by">
-        Отображать по:
-      </span>
+      <span class="footer__show-by"> Отображать по: </span>
       <div class="footer__selector">
         <Select :options="usersCount" :default="10" @option="usersOption" />
       </div>
@@ -43,7 +41,7 @@ export default {
     Icon,
     Select
   },
-  data () {
+  data (): { usersCount: number[]; pagesCount: number[]; currentUsers: number } {
     return {
       usersCount: [10, 15, 20, 25, 50],
       pagesCount: [1, 2, 3, 4, 5, 6, 7],
@@ -52,19 +50,19 @@ export default {
   },
   computed: {
     ...mapGetters(['getUsers']),
-    next () {
+    next (): string {
       return require('@/assets/svg/next.svg')
     },
-    prev () {
+    prev (): string {
       return require('@/assets/svg/prev.svg')
     }
   },
   methods: {
-    usersOption (value: any) {
+    usersOption (value: number): void {
       this.currentUsers = value
       console.log(value)
     },
-    pagesOption (value: any) {
+    pagesOption (value: number): void {
       console.log(value)
     }
   }

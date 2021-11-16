@@ -36,34 +36,34 @@ export default {
     options: Array,
     default: Number
   },
-  data () {
+  data (): { selected: number; open: boolean } {
     return {
       selected: this.default,
       open: false
     }
   },
   computed: {
-    check () {
+    check (): string {
       return require('@/assets/svg/check.svg')
     },
-    selectorArrow () {
+    selectorArrow (): string {
       return require('@/assets/svg/selectArrow.svg')
     },
-    hoverSetter () {
+    hoverSetter (): string {
       return this.open
         ? 'background-color: #f0f2f4;'
         : 'background-color: #ffffff;'
     }
   },
   methods: {
-    changeOption (option) {
+    changeOption (option: number): void {
       this.selected = option
       this.open = false
       this.$emit('option', option)
     }
   },
   watch: {
-    default () {
+    default (): void {
       if (this.selected == null) {
         this.selected = this.default
         this.changeOption(this.default)
@@ -76,6 +76,7 @@ export default {
 <style lang="scss">
 .select {
   position: relative;
+
   height: 100%;
 
   cursor: pointer;
