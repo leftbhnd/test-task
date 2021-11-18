@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { IUser } from '@/store/types'
+import { uniqueUsers } from '@/helpers/helpers'
 
 Vue.use(Vuex)
 
@@ -129,6 +130,11 @@ export default new Vuex.Store({
     },
     REMOVE_SELECTION (state, payload: IUser[]) {
       state.selected = payload
+    },
+
+    DELETE_USER (state, payload: IUser[]) {
+      state.users = payload
+      state.selected = []
     }
   },
   actions: {
@@ -154,8 +160,7 @@ export default new Vuex.Store({
       { commit },
       payload: { type: keyof IUser; data: string | number }
     ): void {
-      const key = payload.type
-      this.state.newUser[key] = payload.data
+      this.state.newUser[payload.type] = payload.data
       commit('NEW_USER_WATCHER', this.state.newUser)
     },
 
@@ -165,12 +170,15 @@ export default new Vuex.Store({
     selectUser ({ commit }, payload: IUser) {
       commit('SELECT_USER', payload)
     },
-
     removeSelection ({ commit }, payload: number) {
       const updated = this.state.selected.filter(user => {
         return user.id !== payload
       })
       commit('REMOVE_SELECTION', updated)
+    },
+    deleteUser ({ commit }) {
+      const updated = uniqueUsers(this.state.users, this.state.selected)
+      commit('DELETE_USER', updated)
     }
   },
   getters: {

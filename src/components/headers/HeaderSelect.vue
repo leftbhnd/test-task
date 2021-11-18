@@ -8,7 +8,7 @@
       <div class="header-select__control control">
         <button class="header-select__edit" @click="editUsers">
           Редактировать
-          <IconWrapper :src="edit"/>
+          <IconWrapper :src="edit" />
         </button>
         <button class="header-select__delete" @click="deleteUsers">
           Удалить
@@ -49,12 +49,15 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['selectAllUsers']),
+    ...mapActions(['selectAllUsers', 'deleteUser']),
     editUsers (): void {
-      console.log(123)
+      console.log('edit')
     },
     deleteUsers (): void {
-      console.log(321)
+      this.$store.dispatch('deleteUser')
+      this.$nextTick(() => {
+        this.$store.dispatch('selectAllUsers', false)
+      })
     },
     cancelSelection (): void {
       this.$store.dispatch('selectAllUsers', false)
@@ -106,7 +109,8 @@ export default {
     background-color: #3e424b;
   }
   &__edit,
-  &__delete, &__cancel {
+  &__delete,
+  &__cancel {
     width: 100%;
     height: 48px;
     padding: 16px;
