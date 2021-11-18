@@ -8,9 +8,11 @@
       <div class="header-select__control control">
         <button class="header-select__edit" @click="editUsers">
           Редактировать
+          <IconWrapper :src="edit"/>
         </button>
         <button class="header-select__delete" @click="deleteUsers">
           Удалить
+          <IconWrapper :src="basket" />
         </button>
         <button class="header-select__cancel" @click="cancelSelection">
           Отмена
@@ -22,8 +24,13 @@
 
 <script lang="ts">
 import { mapGetters, mapActions } from 'vuex'
+import IconWrapper from '@/components/wrappers/IconWrapper.vue'
+
 export default {
   name: 'HeaderSelect',
+  components: {
+    IconWrapper
+  },
   data (): { type: string } {
     return {
       type: 'edit'
@@ -33,10 +40,16 @@ export default {
     ...mapGetters(['getEditState', 'getSelectedUsers']),
     usersCount (): number {
       return this.getSelectedUsers.length
+    },
+    edit (): string {
+      return require('@/assets/svg/edit.svg')
+    },
+    basket (): string {
+      return require('@/assets/svg/delete.svg')
     }
   },
   methods: {
-    ...mapActions(['cancelSelection']),
+    ...mapActions(['selectAllUsers']),
     editUsers (): void {
       console.log(123)
     },
@@ -44,7 +57,7 @@ export default {
       console.log(321)
     },
     cancelSelection (): void {
-      this.$store.dispatch('cancelSelection')
+      this.$store.dispatch('selectAllUsers', false)
     }
   }
 }
@@ -71,12 +84,16 @@ export default {
     flex: 0 0 372px;
   }
   &__edit {
+    display: flex;
+    justify-content: space-between;
     flex: 0 0 170px;
   }
   &__edit:hover {
     background-color: #3e424b;
   }
   &__delete {
+    display: flex;
+    justify-content: space-between;
     flex: 0 0 119px;
   }
   &__delete:hover {
@@ -89,7 +106,7 @@ export default {
     background-color: #3e424b;
   }
   &__edit,
-  &__deletem &__cancel {
+  &__delete, &__cancel {
     width: 100%;
     height: 48px;
     padding: 16px;

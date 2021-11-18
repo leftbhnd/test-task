@@ -1,7 +1,7 @@
 <template>
   <thead>
     <tr class="trow">
-      <th class="trow__checkbox" @click="selectAllUsers" :style="isNewUser">
+      <th class="trow__checkbox" @click="selectAll" :style="isNewUser">
         <IconWrapper class="checkbox" :src="checkbox" />
       </th>
       <th class="trow__name">
@@ -41,10 +41,12 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getNewUserState', 'getSelectAllState']),
+    ...mapGetters(['getNewUserState', 'getUsers', 'getSelectedUsers']),
     checkbox (): string {
-      if (this.checked) {
-        return require('@/assets/svg/checkAll.svg')
+      if (this.getUsers.length === this.getSelectedUsers.length) {
+        return require('@/assets/svg/checked.svg')
+      } else if (this.getSelectedUsers.length > 0) {
+        return require('@/assets/svg/checkSeveral.svg')
       } else {
         return require('@/assets/svg/unchecked.svg')
       }
@@ -58,21 +60,20 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['selectEventObserver', 'selectAllObserver']),
-    selectAllUsers (): void {
+    ...mapActions(['selectEventObserver', 'selectAllUsers']),
+    selectAll (): void {
       this.checked = !this.checked
       if (this.checked) {
-        this.$store.dispatch('selectAllObserver', true)
+        this.$store.dispatch('selectAllUsers', true)
       } else {
-        this.$store.dispatch('selectAllObserver', false)
+        this.$store.dispatch('selectAllUsers', false)
       }
     }
   },
   watch: {
-    getSelectAllState (): void {
-      if (!this.getSelectAllState) {
+    getSelectedUsers (): void {
+      if (this.getSelectedUsers.length !== this.getUsers.length) {
         this.checked = false
-        this.$store.dispatch('selectAllObserver', false)
       }
     }
   }

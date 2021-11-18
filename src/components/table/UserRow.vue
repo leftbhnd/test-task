@@ -1,6 +1,6 @@
 <template>
   <tr>
-    <td class="trow__checkbox" @click="check" :style="isNewUser">
+    <td class="trow__checkbox" @click="select" :style="isNewUser">
       <IconWrapper class="checkbox" :src="checkboxState" />
     </td>
     <td class="trow__name">
@@ -57,6 +57,7 @@
 <script lang="ts">
 import { mapGetters, mapActions } from 'vuex'
 import IconWrapper from '@/components/wrappers/IconWrapper.vue'
+import { isUserSelected } from '@/helpers/helpers'
 
 export default {
   name: 'UserRow',
@@ -73,7 +74,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getNewUserState', 'getSelectedUsers', 'getSelectAllState']),
+    ...mapGetters(['getNewUserState', 'getSelectedUsers']),
     checkboxState (): string {
       if (this.checked) {
         return require('@/assets/svg/checked.svg')
@@ -90,26 +91,19 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['selectEventObserver', 'selectUser', 'removeSelection']),
-    check (): void {
+    ...mapActions(['selectUser', 'removeSelection']),
+    select (): void {
       this.checked = !this.checked
-    }
-  },
-  watch: {
-    checked (): void {
       if (this.checked) {
         this.$store.dispatch('selectUser', this.user)
       } else {
         this.$store.dispatch('removeSelection', this.id)
       }
-    },
+    }
+  },
+  watch: {
     getSelectedUsers (): void {
-      if (!this.getSelectedUsers.length) {
-        this.checked = false
-      }
-    },
-    getSelectAllState (): void {
-      if (this.getSelectAllState) {
+      if (isUserSelected(this.id, this.getSelectedUsers)) {
         this.checked = true
       } else {
         this.checked = false

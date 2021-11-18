@@ -4,26 +4,26 @@
       <IconWrapper class="checkbox" :src="checkbox" />
     </td>
     <td class="trow__name">
-      <input class="edit-input row-input" type="text" v-model="newName" />
+      <input class="edit-input row-input" type="text" v-model="name" />
     </td>
     <td class="trow__phone">
-      <input class="edit-input row-input" type="text" v-model="newPhone" />
+      <input class="edit-input row-input" type="text" v-model="phone" />
     </td>
     <td class="trow__email">
-      <input class="edit-input row-input" type="text" v-model="newEmail" />
+      <input class="edit-input row-input" type="text" v-model="email" />
     </td>
     <td class="trow__registration">
       <input
         class="edit-input row-input"
         type="text"
-        v-model="newRegistration"
+        v-model="registration"
       />
     </td>
     <td class="trow__code">
-      <input class="edit-input row-input" type="text" v-model="newCode" />
+      <input class="edit-input row-input" type="text" v-model="code" />
     </td>
     <td class="trow__city">
-      <input class="edit-input row-input" type="text" v-model="newCity" />
+      <input class="edit-input row-input" type="text" v-model="city" />
     </td>
   </tr>
 </template>
@@ -86,37 +86,37 @@ export default {
         this.id = null
       }
     },
-    newName (): void {
+    name (): void {
       this.$store.dispatch('newUserWatcher', {
         type: 'name',
         data: this.name
       })
     },
-    newPhone (): void {
+    phone (): void {
       this.$store.dispatch('newUserWatcher', {
         type: 'phone',
         data: this.phone
       })
     },
-    newEmail (): void {
+    email (): void {
       this.$store.dispatch('newUserWatcher', {
         type: 'email',
         data: this.email
       })
     },
-    newRegistration (): void {
+    registration (): void {
       this.$store.dispatch('newUserWatcher', {
         type: 'registration',
         data: this.registration
       })
     },
-    newCode (): void {
+    code (): void {
       this.$store.dispatch('newUserWatcher', {
         type: 'code',
         data: this.code
       })
     },
-    newCity (): void {
+    city (): void {
       this.$store.dispatch('newUserWatcher', {
         type: 'city',
         data: this.city

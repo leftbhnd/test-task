@@ -101,84 +101,91 @@ export default new Vuex.Store({
     selected: [] as IUser[],
     newUserState: false,
     saveEventState: false,
-    editState: false,
-    selectAllState: false
+    editState: false
   },
   mutations: {
     NEW_USER_OBSERVER (state, payload: boolean) {
       state.newUserState = payload
     },
+    SAVE_EVENT_OBSERVER (state, payload: boolean) {
+      state.saveEventState = payload
+    },
+    EDIT_OBSERVER (state, payload: boolean) {
+      state.editState = payload
+    },
+    SELECT_ALL_USERS (state, payload: IUser[]) {
+      state.selected = payload
+    },
+
     NEW_USER_WATCHER (state, payload: IUser) {
       state.newUser = payload
     },
+
     ADD_NEW_USER (state, payload: IUser) {
       state.users.push(payload)
-    },
-    SAVE_EVENT_OBSERVER (state, payload: boolean) {
-      state.saveEventState = payload
     },
     SELECT_USER (state, payload: IUser) {
       state.selected.push(payload)
     },
     REMOVE_SELECTION (state, payload: IUser[]) {
       state.selected = payload
-    },
-    CANCEL_SELECTION (state) {
-      state.selected = []
-      state.selectAllState = false
-    },
-    SELECT_ALL_OBSERVER (state, payload: boolean) {
-      state.selectAllState = payload
     }
   },
   actions: {
     newUserObserver ({ commit }, payload: boolean): void {
       commit('NEW_USER_OBSERVER', payload)
     },
+    saveEventObserver ({ commit }, payload: boolean) {
+      commit('SAVE_EVENT_OBSERVER', payload)
+    },
+    editObserver ({ commit }, payload: boolean) {
+      commit('EDIT_OBSERVER', payload)
+    },
+    selectAllUsers ({ commit }, payload: boolean) {
+      if (payload) {
+        this.state.selected = this.state.users
+      } else {
+        this.state.selected = []
+      }
+      commit('SELECT_ALL_USERS', this.state.selected)
+    },
+
     newUserWatcher (
       { commit },
       payload: { type: keyof IUser; data: string | number }
     ): void {
-      this.state.newUser[payload.type] = payload.data
+      const key = payload.type
+      this.state.newUser[key] = payload.data
       commit('NEW_USER_WATCHER', this.state.newUser)
     },
+
     addNewUser ({ commit }, payload: IUser) {
       commit('ADD_NEW_USER', payload)
-    },
-    saveEventObserver ({ commit }, payload: boolean) {
-      commit('SAVE_EVENT_OBSERVER', payload)
     },
     selectUser ({ commit }, payload: IUser) {
       commit('SELECT_USER', payload)
     },
+
     removeSelection ({ commit }, payload: number) {
       const updated = this.state.selected.filter(user => {
         return user.id !== payload
       })
       commit('REMOVE_SELECTION', updated)
-    },
-    cancelSelection ({ commit }) {
-      commit('CANCEL_SELECTION')
-    },
-    selectAllObserver ({ commit }, payload: boolean) {
-      commit('SELECT_ALL_OBSERVER', payload)
     }
   },
   getters: {
     getUsers (state): IUser[] {
       return state.users
     },
+    getSelectedUsers (state): IUser[] {
+      return state.selected
+    },
+
     getNewUserState (state): boolean {
       return state.newUserState
     },
     getSaveEvent (state): boolean {
       return state.saveEventState
-    },
-    getSelectedUsers (state): IUser[] {
-      return state.selected
-    },
-    getSelectAllState (state): boolean {
-      return state.selectAllState
     },
     getEditState (state): boolean {
       return state.editState
