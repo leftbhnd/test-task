@@ -57,7 +57,7 @@
 <script lang="ts">
 import { mapGetters, mapActions } from 'vuex'
 import IconWrapper from '@/components/wrappers/IconWrapper.vue'
-import { isUserSelected } from '@/helpers/helpers'
+import { isElementInArray } from '@/helpers/helpers'
 
 export default {
   name: 'UserRow',
@@ -103,7 +103,7 @@ export default {
   },
   watch: {
     getSelectedUsers (): void {
-      if (isUserSelected(this.id, this.getSelectedUsers)) {
+      if (isElementInArray(this.id, this.getSelectedUsers)) {
         this.checked = true
       } else {
         this.checked = false
