@@ -1,6 +1,6 @@
 <template>
   <tr class="trow">
-    <td class="trow__checkbox" :style="'pointer-events: none;'">
+    <td class="trow__checkbox" :style="newUser">
       <IconWrapper class="checkbox" :src="checkbox" />
     </td>
     <td class="trow__name">
@@ -53,6 +53,9 @@ export default {
     ...mapGetters(['getSaveEvent', 'getUsers']),
     checkbox (): string {
       return require('@/assets/svg/unchecked.svg')
+    },
+    newUser (): string {
+      return 'pointer-events: none;'
     }
   },
   methods: {
@@ -85,42 +88,6 @@ export default {
         this.city = ''
         this.id = null
       }
-    },
-    name (): void {
-      this.$store.dispatch('newUserWatcher', {
-        type: 'name',
-        data: this.name
-      })
-    },
-    phone (): void {
-      this.$store.dispatch('newUserWatcher', {
-        type: 'phone',
-        data: this.phone
-      })
-    },
-    email (): void {
-      this.$store.dispatch('newUserWatcher', {
-        type: 'email',
-        data: this.email
-      })
-    },
-    registration (): void {
-      this.$store.dispatch('newUserWatcher', {
-        type: 'registration',
-        data: this.registration
-      })
-    },
-    code (): void {
-      this.$store.dispatch('newUserWatcher', {
-        type: 'code',
-        data: this.code
-      })
-    },
-    city (): void {
-      this.$store.dispatch('newUserWatcher', {
-        type: 'city',
-        data: this.city
-      })
     }
   }
 }

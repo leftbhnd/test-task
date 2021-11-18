@@ -90,15 +90,6 @@ export default new Vuex.Store({
         id: 8
       }
     ] as IUser[],
-    newUser: {
-      name: '',
-      phone: '',
-      email: '',
-      registration: '',
-      code: null,
-      city: '',
-      id: null
-    } as IUser,
     selected: [] as IUser[],
     newUserState: false,
     saveEventState: false,
@@ -116,10 +107,6 @@ export default new Vuex.Store({
     },
     SELECT_ALL_USERS (state, payload: IUser[]) {
       state.selected = payload
-    },
-
-    NEW_USER_WATCHER (state, payload: IUser) {
-      state.newUser = payload
     },
 
     ADD_NEW_USER (state, payload: IUser) {
@@ -154,14 +141,6 @@ export default new Vuex.Store({
         this.state.selected = []
       }
       commit('SELECT_ALL_USERS', this.state.selected)
-    },
-
-    newUserWatcher (
-      { commit },
-      payload: { type: keyof IUser; data: string | number }
-    ): void {
-      this.state.newUser[payload.type] = payload.data
-      commit('NEW_USER_WATCHER', this.state.newUser)
     },
 
     addNewUser ({ commit }, payload: IUser) {
