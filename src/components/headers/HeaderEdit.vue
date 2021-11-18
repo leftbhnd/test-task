@@ -4,12 +4,8 @@
       <span>{{ title }}</span>
     </div>
     <div class="header-add__control control">
-      <button class="header-add__save" @click="saveNewUser">
-        Сохранить
-      </button>
-      <button class="header-add__cancel" @click="cancelNewUser">
-        Отмена
-      </button>
+      <button class="header-add__save" @click="save">Сохранить</button>
+      <button class="header-add__cancel" @click="cancel">Отмена</button>
     </div>
   </header>
 </template>
@@ -19,18 +15,39 @@ import { mapActions } from 'vuex'
 export default {
   name: 'HeaderEdit',
   props: {
-    title: { type: String, default: 'Добавление нового пользователя' }
+    type: String
+  },
+  computed: {
+    title (): string {
+      if (this.type === 'new') {
+        return 'Добавление нового пользователя'
+      } else {
+        return 'Редактирование'
+      }
+    }
   },
   methods: {
-    ...mapActions(['newUserObserver', 'saveEventObserver']),
-    cancelNewUser () {
-      this.$store.dispatch('newUserObserver', false)
-    },
-    saveNewUser () {
-      this.$store.dispatch('saveEventObserver', true)
-      this.$nextTick(() => {
+    ...mapActions([
+      'newUserObserver',
+      'editObserver',
+      'saveEventObserver'
+    ]),
+    cancel (): void {
+      if (this.type === 'new') {
         this.$store.dispatch('newUserObserver', false)
-      })
+      } else {
+        this.$store.dispatch('editObserver', false)
+      }
+    },
+    save (): void {
+      if (this.type === 'new') {
+        this.$store.dispatch('saveEventObserver', true)
+        this.$nextTick(() => {
+          this.$store.dispatch('newUserObserver', false)
+        })
+      } else {
+        this.$store.dispatch('saveEventObserver', true)
+      }
     }
   }
 }
