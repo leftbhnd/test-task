@@ -43,7 +43,7 @@ export default {
   computed: {
     ...mapGetters(['getNewUserState', 'getUsers', 'getSelectedUsers']),
     checkbox (): string {
-      if (this.getUsers.length === this.getSelectedUsers.length) {
+      if (this.getUsers.length === this.getSelectedUsers.length && this.getUsers.length) {
         return require('@/assets/svg/checked.svg')
       } else if (this.getSelectedUsers.length > 0) {
         return require('@/assets/svg/checkSeveral.svg')
@@ -74,6 +74,8 @@ export default {
     getSelectedUsers (): void {
       if (this.getSelectedUsers.length !== this.getUsers.length) {
         this.checked = false
+      } else if (this.getSelectedUsers.length === this.getUsers.length && this.getUsers.length) {
+        this.checked = true
       }
     }
   }
