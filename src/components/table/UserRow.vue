@@ -1,55 +1,61 @@
 <template>
   <tr>
-    <td class="trow__checkbox" @click="select" :style="isNewUser">
+    <td class="trow__checkbox" @click="select" :style="isEditUser">
       <IconWrapper class="checkbox" :src="checkboxState" />
     </td>
     <td class="trow__name">
       <input
-        disabled="disabled"
-        class="row-input"
+        class="table-input"
         type="text"
-        :value="user.name"
+        v-model="currentUser.name"
+        v-if="isEdit"
       />
+      <span v-else>{{ user.name }}</span>
     </td>
     <td class="trow__phone">
       <input
-        disabled="disabled"
-        class="row-input"
+        class="table-input"
         type="text"
-        :value="user.phone"
+        v-model="currentUser.phone"
+        v-if="isEdit"
       />
+      <span v-else>{{ user.phone }}</span>
     </td>
     <td class="trow__email">
       <input
-        disabled="disabled"
-        class="row-input"
+        class="table-input"
         type="text"
-        :value="user.email"
+        v-model="currentUser.email"
+        v-if="isEdit"
       />
+      <span v-else>{{ user.email }}</span>
     </td>
     <td class="trow__registration">
       <input
-        disabled="disabled"
-        class="row-input"
+        class="table-input"
         type="text"
-        :value="user.registration"
+        v-model="currentUser.registration"
+        v-if="isEdit"
       />
+      <span v-else>{{ user.registration }}</span>
     </td>
     <td class="trow__code">
       <input
-        disabled="disabled"
-        class="row-input"
+        class="table-input"
         type="text"
-        :value="user.code"
+        v-model="currentUser.code"
+        v-if="isEdit"
       />
+      <span v-else>{{ user.code }}</span>
     </td>
     <td class="trow__city">
       <input
-        disabled="disabled"
-        class="row-input"
+        class="table-input"
         type="text"
-        :value="user.city"
+        v-model="currentUser.city"
+        v-if="isEdit"
       />
+      <span v-else>{{ user.city }}</span>
     </td>
   </tr>
 </template>
@@ -57,7 +63,8 @@
 <script lang="ts">
 import { mapGetters, mapActions } from 'vuex'
 import IconWrapper from '@/components/wrappers/IconWrapper.vue'
-import { isElementInArray } from '@/helpers/helpers'
+import { isUserInArray } from '@/helpers/helpers'
+import { IApiUser } from '@/store/types'
 
 export default {
   name: 'UserRow',
@@ -68,13 +75,32 @@ export default {
     user: Object,
     id: Number
   },
-  data (): { checked: boolean } {
+  data (): {
+    isEdit: boolean
+    checked: boolean
+    currentUser: IApiUser
+    } {
     return {
-      checked: false
+      isEdit: false,
+      checked: false,
+      currentUser: {
+        name: this.user.name,
+        phone: this.user.phone,
+        email: this.user.email,
+        registration: this.user.registration,
+        code: this.user.code,
+        city: this.user.city,
+        id: this.user.id
+      } as IApiUser
     }
   },
   computed: {
-    ...mapGetters(['getNewUserState', 'getSelectedUsers']),
+    ...mapGetters([
+      'getNewUserState',
+      'getSelectedUsers',
+      'getEditState',
+      'getSaveEvent'
+    ]),
     checkboxState (): string {
       if (this.checked) {
         return require('@/assets/svg/checked.svg')
@@ -82,20 +108,34 @@ export default {
         return require('@/assets/svg/unchecked.svg')
       }
     },
-    isNewUser (): string {
-      if (this.getNewUserState) {
+    isEditUser (): string {
+      if (this.getNewUserState || this.getEditState) {
         return 'pointer-events: none;'
       } else {
         return 'pointer-events: auto;'
       }
+    },
+    selectCondition (): boolean {
+      return isUserInArray(this.user, this.getSelectedUsers)
+    },
+    saveCondition (): boolean {
+      return this.getSaveEvent && this.selectCondition
+    },
+    editCondition (): boolean {
+      return this.getEditState && this.selectCondition
     }
   },
   methods: {
-    ...mapActions(['selectUser', 'removeSelection']),
+    ...mapActions([
+      'selectUser',
+      'removeSelection',
+      'updateUser',
+      'saveEventObserver'
+    ]),
     select (): void {
       this.checked = !this.checked
       if (this.checked) {
-        this.$store.dispatch('selectUser', this.user)
+        this.$store.dispatch('selectUser', this.id)
       } else {
         this.$store.dispatch('removeSelection', this.id)
       }
@@ -103,10 +143,34 @@ export default {
   },
   watch: {
     getSelectedUsers (): void {
-      if (isElementInArray(this.id, this.getSelectedUsers)) {
+      if (this.selectCondition) {
         this.checked = true
       } else {
         this.checked = false
+      }
+    },
+    getSaveEvent (): void {
+      if (this.saveCondition) {
+        this.$store.dispatch('updateUser', {
+          id: this.user.id,
+          user: this.currentUser
+        })
+        this.isEdit = false
+        this.$nextTick(() => {
+          this.$store.dispatch('editObserver', false)
+        })
+        this.$nextTick(() => {
+          this.$store.dispatch('saveEventObserver', false)
+        })
+      }
+    },
+    getEditState (): void {
+      if (this.editCondition) {
+        console.log(this.user)
+        this.isEdit = true
+      } else {
+        this.isEdit = false
+        this.currentUser = this.user
       }
     }
   }

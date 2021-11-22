@@ -1,7 +1,7 @@
 <template>
   <thead>
     <tr class="trow">
-      <th class="trow__checkbox" @click="selectAll" :style="isNewUser">
+      <th class="trow__checkbox" @click="selectAll" :style="isEditState">
         <IconWrapper class="checkbox" :src="checkbox" />
       </th>
       <th class="trow__name">
@@ -41,18 +41,21 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getNewUserState', 'getUsers', 'getSelectedUsers']),
+    ...mapGetters(['getNewUserState', 'getUsers', 'getSelectedUsers', 'getEditState']),
+    checkAllConditon (): boolean {
+      return this.getUsers.length === this.getSelectedUsers.length && this.getUsers.length
+    },
     checkbox (): string {
-      if (this.getUsers.length === this.getSelectedUsers.length && this.getUsers.length) {
+      if (this.checkAllConditon) {
         return require('@/assets/svg/checked.svg')
-      } else if (this.getSelectedUsers.length > 0) {
+      } else if (this.getSelectedUsers.length) {
         return require('@/assets/svg/checkSeveral.svg')
       } else {
         return require('@/assets/svg/unchecked.svg')
       }
     },
-    isNewUser (): string {
-      if (this.getNewUserState) {
+    isEditState (): string {
+      if (this.getNewUserState || this.getEditState) {
         return 'pointer-events: none;'
       } else {
         return 'pointer-events: auto;'
@@ -72,10 +75,10 @@ export default {
   },
   watch: {
     getSelectedUsers (): void {
-      if (this.getSelectedUsers.length !== this.getUsers.length) {
-        this.checked = false
-      } else if (this.getSelectedUsers.length === this.getUsers.length && this.getUsers.length) {
+      if (this.checkAllConditon) {
         this.checked = true
+      } else {
+        this.checked = false
       }
     }
   }
