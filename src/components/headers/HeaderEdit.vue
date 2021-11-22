@@ -29,24 +29,22 @@ export default {
   methods: {
     ...mapActions([
       'newUserObserver',
-      'editObserver',
+      'editEventObserver',
       'saveEventObserver'
     ]),
     cancel (): void {
       if (this.type === 'new') {
         this.$store.dispatch('newUserObserver', false)
       } else {
-        this.$store.dispatch('editObserver', false)
+        this.$store.dispatch('editEventObserver', false)
       }
     },
     save (): void {
+      this.$store.dispatch('saveEventObserver', true)
       if (this.type === 'new') {
-        this.$store.dispatch('saveEventObserver', true)
         this.$nextTick(() => {
           this.$store.dispatch('newUserObserver', false)
         })
-      } else {
-        this.$store.dispatch('saveEventObserver', true)
       }
     }
   }

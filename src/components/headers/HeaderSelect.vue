@@ -1,6 +1,6 @@
 <template>
   <div>
-    <HeaderEdit v-if="getEditState" :type="type" />
+    <HeaderEdit v-if="getEditEvent" :type="type" />
     <header class="header-select container" v-else>
       <div class="header-select__title">
         <span>Выделено: {{ usersCount }}</span>
@@ -39,7 +39,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getEditState', 'getSelectedUsers']),
+    ...mapGetters(['getEditEvent', 'getSelectedUsers']),
     usersCount (): number {
       return this.getSelectedUsers.length
     },
@@ -51,9 +51,9 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['selectAllUsers', 'deleteUser', 'editObserver']),
+    ...mapActions(['selectAllUsers', 'deleteUser', 'editEventObserver']),
     editUsers (): void {
-      this.$store.dispatch('editObserver', true)
+      this.$store.dispatch('editEventObserver', true)
     },
     deleteUsers (): void {
       this.$store.dispatch('deleteUser')

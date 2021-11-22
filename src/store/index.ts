@@ -9,7 +9,7 @@ export default new Vuex.Store({
     users: [] as IUser[],
     newUserState: false,
     saveEventState: false,
-    editState: false
+    editEventState: false
   },
   mutations: {
     NEW_USER_OBSERVER (state, payload: boolean) {
@@ -18,15 +18,12 @@ export default new Vuex.Store({
     SAVE_EVENT_OBSERVER (state, payload: boolean) {
       state.saveEventState = payload
     },
-    EDIT_OBSERVER (state, payload: boolean) {
-      state.editState = payload
-    },
-    SELECT_ALL_USERS (state, payload: IUser[]) {
-      state.users = payload
+    EDIT_EVENT_OBSERVER (state, payload: boolean) {
+      state.editEventState = payload
     },
 
-    ADD_NEW_USER (state, payload: IUser) {
-      state.users.push(payload)
+    SELECT_ALL_USERS (state, payload: IUser[]) {
+      state.users = payload
     },
     SELECT_USER (state, payload: IUser[]) {
       state.users = payload
@@ -35,13 +32,16 @@ export default new Vuex.Store({
       state.users = payload
     },
 
-    DELETE_USER (state, payload: IUser[]) {
+    GET_USERS_FROM_API (state, payload: IUser[]) {
       state.users = payload
+    },
+    ADD_NEW_USER (state, payload: IUser) {
+      state.users.push(payload)
     },
     UPDATE_USER (state, payload: IUser[]) {
       state.users = payload
     },
-    GET_USERS_FROM_API (state, payload: IUser[]) {
+    DELETE_USER (state, payload: IUser[]) {
       state.users = payload
     }
   },
@@ -52,23 +52,22 @@ export default new Vuex.Store({
     saveEventObserver ({ commit }, payload: boolean) {
       commit('SAVE_EVENT_OBSERVER', payload)
     },
-    editObserver ({ commit }, payload: boolean) {
-      commit('EDIT_OBSERVER', payload)
+    editEventObserver ({ commit }, payload: boolean) {
+      commit('EDIT_EVENT_OBSERVER', payload)
     },
 
     selectAllUsers ({ commit }, payload: boolean) {
       let updated = []
-      updated = this.state.users.map(el => {
+      updated = this.state.users.map(user => {
         if (payload) {
-          el.selected = true
+          user.selected = true
         } else {
-          el.selected = false
+          user.selected = false
         }
-        return el
+        return user
       })
       commit('SELECT_ALL_USERS', updated)
     },
-
     selectUser ({ commit }, payload: number) {
       const updated = this.state.users.map(user => {
         if (user.id === payload) {
@@ -88,8 +87,28 @@ export default new Vuex.Store({
       commit('REMOVE_SELECTION', updated)
     },
 
+    getUsersFromApi ({ commit }, payload: IUser[]) {
+      const updated = payload.map(user => {
+        user.id = Number(user.id)
+        user.phone = Number(user.phone)
+        user.code = Number(user.code)
+        user.selected = false
+        return user
+      })
+      commit('GET_USERS_FROM_API', updated)
+    },
     addNewUser ({ commit }, payload: IUser) {
       commit('ADD_NEW_USER', payload)
+    },
+    updateUser ({ commit }, payload: IUser) {
+      const updated = this.state.users.map(user => {
+        if (user.id === payload.id) {
+          return payload
+        } else {
+          return user
+        }
+      })
+      commit('UPDATE_USER', updated)
     },
     deleteUser ({ commit }) {
       let index = 0
@@ -101,29 +120,18 @@ export default new Vuex.Store({
         }
       })
       commit('DELETE_USER', updated)
-    },
-    updateUser ({ commit }, payload: { id: number, user: IUser }) {
-      const updated = this.state.users.map(el => {
-        if (el.id === payload.id) {
-          return payload.user
-        } else {
-          return el
-        }
-      })
-      commit('UPDATE_USER', updated)
-    },
-    getUsersFromApi ({ commit }, payload: IUser[]) {
-      const updated = payload.map(el => {
-        el.id = Number(el.id)
-        el.phone = Number(el.phone)
-        el.code = Number(el.code)
-        el.selected = false
-        return el
-      })
-      commit('GET_USERS_FROM_API', updated)
     }
   },
   getters: {
+    getNewUserState (state): boolean {
+      return state.newUserState
+    },
+    getSaveEvent (state): boolean {
+      return state.saveEventState
+    },
+    getEditEvent (state): boolean {
+      return state.editEventState
+    },
     getUsers (state): IUser[] {
       return state.users
     },
@@ -133,16 +141,6 @@ export default new Vuex.Store({
           return user
         }
       })
-    },
-
-    getNewUserState (state): boolean {
-      return state.newUserState
-    },
-    getSaveEvent (state): boolean {
-      return state.saveEventState
-    },
-    getEditState (state): boolean {
-      return state.editState
     }
   }
 })
