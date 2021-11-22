@@ -109,17 +109,14 @@ td {
   border-bottom: 1px solid #c6d1dd80;
   border-left: 1px solid #c6d1dd80;
 }
-.row-input {
-  box-sizing: border-box;
+.table-input {
   width: 100%;
   height: 100%;
   padding-left: 14px;
 
-  background-color: #ffffff;
-}
-.edit-input {
   border: 1px solid #4aa6ff;
   border-radius: 4px;
+  background-color: #ffffff;
 }
 .checkbox {
   cursor: pointer;

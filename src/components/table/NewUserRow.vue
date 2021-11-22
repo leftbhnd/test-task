@@ -4,26 +4,26 @@
       <IconWrapper class="checkbox" :src="checkbox" />
     </td>
     <td class="trow__name">
-      <input class="edit-input row-input" type="text" v-model="name" />
+      <input class="table-input" type="text" v-model="name" />
     </td>
     <td class="trow__phone">
-      <input class="edit-input row-input" type="text" v-model="phone" />
+      <input class="table-input" type="text" v-model="phone" />
     </td>
     <td class="trow__email">
-      <input class="edit-input row-input" type="text" v-model="email" />
+      <input class="table-input" type="text" v-model="email" />
     </td>
     <td class="trow__registration">
       <input
-        class="edit-input row-input"
+        class="table-input"
         type="text"
         v-model="registration"
       />
     </td>
     <td class="trow__code">
-      <input class="edit-input row-input" type="text" v-model="code" />
+      <input class="table-input" type="text" v-model="code" />
     </td>
     <td class="trow__city">
-      <input class="edit-input row-input" type="text" v-model="city" />
+      <input class="table-input" type="text" v-model="city" />
     </td>
   </tr>
 </template>
@@ -41,12 +41,13 @@ export default {
   data (): IUser {
     return {
       name: '',
-      phone: '',
+      phone: null,
       email: '',
       registration: '',
       code: null,
       city: '',
-      id: null
+      id: null,
+      selected: false
     }
   },
   computed: {
@@ -71,7 +72,8 @@ export default {
           registration: this.registration,
           code: this.code,
           city: this.city,
-          id: this.getUsers.length
+          id: this.getUsers.length,
+          selected: false
         })
         this.$nextTick(() => {
           this.$store.dispatch('saveEventObserver', false)
@@ -87,6 +89,7 @@ export default {
         this.code = ''
         this.city = ''
         this.id = null
+        this.selected = false
       }
     }
   }
