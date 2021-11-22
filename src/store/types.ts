@@ -1,4 +1,4 @@
-export interface IUser {
+export interface IApiUser {
   name: string
   phone: number | string
   email: string
@@ -6,4 +6,14 @@ export interface IUser {
   code: number
   city: string
   id: number
+}
+
+export interface IUser extends IApiUser {
+  selected: boolean
+}
+
+export interface IResponse {
+  success: boolean
+  payload: IUser[] | Record<string, never>
+  description: string
 }
