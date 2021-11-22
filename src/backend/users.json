@@ -1,0 +1,40 @@
+{
+  "users": {
+    "user1": {
+      "name": "Dima",
+      "phone": "89194859164",
+      "email": "d.laletin@promo-bot.ru",
+      "registration": "11.11.2021",
+      "code": "123",
+      "city": "Perm",
+      "id": "0"
+    },
+    "user2": {
+      "name": "Dima",
+      "phone": "89194859165",
+      "email": "c.laletin@promo-bot.ru",
+      "registration": "12.11.2021",
+      "code": "1234",
+      "city": "Perm-1",
+      "id": "1"
+    },
+    "user3": {
+      "name": "Dima",
+      "phone": "89194859166",
+      "email": "e.laletin@promo-bot.ru",
+      "registration": "13.11.2021",
+      "code": "1235",
+      "city": "Perm-2",
+      "id": "2"
+    },
+    "user4": {
+      "name": "Dima",
+      "phone": "89194859167",
+      "email": "f.laletin@promo-bot.ru",
+      "registration": "14.11.2021",
+      "code": "1236",
+      "city": "Perm-3",
+      "id": "3"
+    }
+  }
+}
