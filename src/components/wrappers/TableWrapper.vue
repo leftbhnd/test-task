@@ -7,7 +7,6 @@
         v-for="(user, index) in getUsers"
         :key="index"
         :user="user"
-        :id="index"
         class="trow"
       />
     </tbody>
