@@ -24,11 +24,13 @@
 
 <script lang="ts">
 import { mapGetters, mapActions } from 'vuex'
+import HeaderEdit from '@/components/headers/HeaderEdit.vue'
 import IconWrapper from '@/components/wrappers/IconWrapper.vue'
 
 export default {
   name: 'HeaderSelect',
   components: {
+    HeaderEdit,
     IconWrapper
   },
   data (): { type: string } {
@@ -49,9 +51,9 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['selectAllUsers', 'deleteUser']),
+    ...mapActions(['selectAllUsers', 'deleteUser', 'editObserver']),
     editUsers (): void {
-      console.log('edit')
+      this.$store.dispatch('editObserver', true)
     },
     deleteUsers (): void {
       this.$store.dispatch('deleteUser')
