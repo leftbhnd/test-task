@@ -1,96 +1,12 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { IUser } from '@/store/types'
-import { uniqueUsers } from '@/helpers/helpers'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    users: [
-      {
-        name: 'Дима',
-        phone: 228,
-        email: 'd@p.ru',
-        registration: '01.11.1999',
-        code: 1,
-        city: 'Perm',
-        id: 0
-      },
-      {
-        name: 'Дима',
-        phone: 228,
-        email: 'd@p.ru',
-        registration: '01.11.1999',
-        code: 2,
-        city: 'Perm',
-        id: 1
-      },
-      {
-        name: 'Дима',
-        phone: 228,
-        email: 'd@p.ru',
-        registration: '01.11.1999',
-        code: 3,
-        city: 'Perm',
-        id: 2
-      },
-      {
-        name: 'Дима',
-        phone: 228,
-        email: 'd@p.ru',
-        registration: '01.11.1999',
-        code: 4,
-        city: 'Perm',
-        id: 3
-      },
-      {
-        name: 'Дима',
-        phone: 228,
-        email: 'd@p.ru',
-        registration: '01.11.1999',
-        code: 5,
-        city: 'Perm',
-        id: 4
-      },
-      {
-        name: 'Дима',
-        phone: 228,
-        email: 'd@p.ru',
-        registration: '01.11.1999',
-        code: 6,
-        city: 'Perm',
-        id: 5
-      },
-      {
-        name: 'Дима',
-        phone: 228,
-        email: 'd@p.ru',
-        registration: '01.11.1999',
-        code: 7,
-        city: 'Perm',
-        id: 6
-      },
-      {
-        name: 'Дима',
-        phone: 228,
-        email: 'd@p.ru',
-        registration: '01.11.1999',
-        code: 8,
-        city: 'Perm',
-        id: 7
-      },
-      {
-        name: 'Дима',
-        phone: 228,
-        email: 'd@p.ru',
-        registration: '01.11.1999',
-        code: 12,
-        city: 'Perm',
-        id: 8
-      }
-    ] as IUser[],
-    selected: [] as IUser[],
+    users: [] as IUser[],
     newUserState: false,
     saveEventState: false,
     editState: false
@@ -106,22 +22,27 @@ export default new Vuex.Store({
       state.editState = payload
     },
     SELECT_ALL_USERS (state, payload: IUser[]) {
-      state.selected = payload
+      state.users = payload
     },
 
     ADD_NEW_USER (state, payload: IUser) {
       state.users.push(payload)
     },
-    SELECT_USER (state, payload: IUser) {
-      state.selected.push(payload)
+    SELECT_USER (state, payload: IUser[]) {
+      state.users = payload
     },
     REMOVE_SELECTION (state, payload: IUser[]) {
-      state.selected = payload
+      state.users = payload
     },
 
     DELETE_USER (state, payload: IUser[]) {
       state.users = payload
-      state.selected = []
+    },
+    UPDATE_USER (state, payload: IUser[]) {
+      state.users = payload
+    },
+    GET_USERS_FROM_API (state, payload: IUser[]) {
+      state.users = payload
     }
   },
   actions: {
@@ -134,30 +55,72 @@ export default new Vuex.Store({
     editObserver ({ commit }, payload: boolean) {
       commit('EDIT_OBSERVER', payload)
     },
+
     selectAllUsers ({ commit }, payload: boolean) {
-      if (payload) {
-        this.state.selected = this.state.users
-      } else {
-        this.state.selected = []
-      }
-      commit('SELECT_ALL_USERS', this.state.selected)
+      let updated = []
+      updated = this.state.users.map(el => {
+        if (payload) {
+          el.selected = true
+        } else {
+          el.selected = false
+        }
+        return el
+      })
+      commit('SELECT_ALL_USERS', updated)
+    },
+
+    selectUser ({ commit }, payload: number) {
+      const updated = this.state.users.map(user => {
+        if (user.id === payload) {
+          user.selected = true
+        }
+        return user
+      })
+      commit('SELECT_USER', updated)
+    },
+    removeSelection ({ commit }, payload: number) {
+      const updated = this.state.users.map(user => {
+        if (user.id === payload) {
+          user.selected = false
+        }
+        return user
+      })
+      commit('REMOVE_SELECTION', updated)
     },
 
     addNewUser ({ commit }, payload: IUser) {
       commit('ADD_NEW_USER', payload)
     },
-    selectUser ({ commit }, payload: IUser) {
-      commit('SELECT_USER', payload)
-    },
-    removeSelection ({ commit }, payload: number) {
-      const updated = this.state.selected.filter(user => {
-        return user.id !== payload
-      })
-      commit('REMOVE_SELECTION', updated)
-    },
     deleteUser ({ commit }) {
-      const updated = uniqueUsers(this.state.users, this.state.selected)
+      let index = 0
+      const updated = this.state.users.filter(user => {
+        if (!user.selected) {
+          user.id = index
+          index++
+          return user
+        }
+      })
       commit('DELETE_USER', updated)
+    },
+    updateUser ({ commit }, payload: { id: number, user: IUser }) {
+      const updated = this.state.users.map(el => {
+        if (el.id === payload.id) {
+          return payload.user
+        } else {
+          return el
+        }
+      })
+      commit('UPDATE_USER', updated)
+    },
+    getUsersFromApi ({ commit }, payload: IUser[]) {
+      const updated = payload.map(el => {
+        el.id = Number(el.id)
+        el.phone = Number(el.phone)
+        el.code = Number(el.code)
+        el.selected = false
+        return el
+      })
+      commit('GET_USERS_FROM_API', updated)
     }
   },
   getters: {
@@ -165,7 +128,11 @@ export default new Vuex.Store({
       return state.users
     },
     getSelectedUsers (state): IUser[] {
-      return state.selected
+      return state.users.filter(user => {
+        if (user.selected) {
+          return user
+        }
+      })
     },
 
     getNewUserState (state): boolean {
