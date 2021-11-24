@@ -4,25 +4,62 @@
       <span>{{ title }}</span>
     </div>
     <div class="header-add__control control">
-      <button class="header-add__save" @click="save">Сохранить</button>
+      <button
+        class="header-add__save"
+        :disabled="!saveCondition"
+        @click="save"
+        :style="hoverStyle"
+      >
+        Сохранить
+      </button>
       <button class="header-add__cancel" @click="cancel">Отмена</button>
     </div>
   </header>
 </template>
 
 <script lang="ts">
-import { mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 export default {
   name: 'HeaderEdit',
   props: {
     type: String
   },
   computed: {
+    ...mapGetters([
+      'getIsEditUserValid',
+      'getIsNewUserValid',
+      'getNewUserState'
+    ]),
     title (): string {
       if (this.type === 'new') {
         return 'Добавление нового пользователя'
       } else {
         return 'Редактирование'
+      }
+    },
+    getBackGroundColor (): string {
+      if (this.saveCondition) {
+        return '#3e424b'
+      } else {
+        return '#ff7979'
+      }
+    },
+    hoverStyle (): { '--background-color-hover': string } {
+      if (this.saveCondition) {
+        return {
+          '--background-color-hover': this.getBackGroundColor
+        }
+      } else {
+        return {
+          '--background-color-hover': this.getBackGroundColor
+        }
+      }
+    },
+    saveCondition (): boolean {
+      if (this.getNewUserState) {
+        return this.getIsNewUserValid
+      } else {
+        return this.getIsEditUserValid
       }
     }
   },
@@ -30,11 +67,15 @@ export default {
     ...mapActions([
       'newUserObserver',
       'editEventObserver',
-      'saveEventObserver'
+      'saveEventObserver',
+      'newUserValidationObserver'
     ]),
     cancel (): void {
       if (this.type === 'new') {
         this.$store.dispatch('newUserObserver', false)
+        this.$nextTick(() => {
+          this.$store.dispatch('newUserValidationObserver', false)
+        })
       } else {
         this.$store.dispatch('editEventObserver', false)
       }
@@ -42,8 +83,9 @@ export default {
     save (): void {
       this.$store.dispatch('saveEventObserver', true)
       if (this.type === 'new') {
+        this.$store.dispatch('newUserObserver', false)
         this.$nextTick(() => {
-          this.$store.dispatch('newUserObserver', false)
+          this.$store.dispatch('newUserValidationObserver', false)
         })
       }
     }
@@ -75,7 +117,7 @@ export default {
     flex: 0 0 108px;
   }
   &__save:hover {
-    background-color: #3e424b;
+    background-color: var(--background-color-hover);
   }
   &__cancel {
     flex: 0 0 83px;

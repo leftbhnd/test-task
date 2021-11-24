@@ -3,84 +3,70 @@
     <td class="trow__checkbox" @click="select" :style="editUserStyle">
       <IconWrapper class="checkbox" :src="checkboxState" />
     </td>
-    <td class="trow__name">
-      <input
-        v-if="editCondition"
-        class="table-input"
-        type="text"
-        v-model="name"
-        :style="nameValid"
-      />
-      <span v-else>{{ user.name }}</span>
-    </td>
-    <td class="trow__phone">
-      <input
-        v-if="editCondition"
-        class="table-input"
-        type="text"
-        v-model="phone"
-        :style="phoneValid"
-      />
-      <span v-else>{{ user.phone }}</span>
-    </td>
-    <td class="trow__email">
-      <input
-        v-if="editCondition"
-        class="table-input"
-        type="text"
-        v-model="email"
-        :style="emailValid"
-      />
-      <span v-else>{{ user.email }}</span>
-    </td>
-    <td class="trow__registration">
-      <input
-        v-if="editCondition"
-        class="table-input"
-        type="text"
-        v-model="registration"
-        :style="registrationValid"
-      />
-      <span v-else>{{ user.registration }}</span>
-    </td>
-    <td class="trow__code">
-      <input
-        v-if="editCondition"
-        class="table-input"
-        type="text"
-        v-model="code"
-        :style="codeValid"
-      />
-      <span v-else>{{ user.code }}</span>
-    </td>
-    <td class="trow__city">
-      <input
-        v-if="editCondition"
-        class="table-input"
-        type="text"
-        v-model="city"
-        :style="cityValid"
-      />
-      <span v-else>{{ user.city }}</span>
-    </td>
+    <TDWrapper
+      class="trow__name"
+      :userData="user.name"
+      :userInfo="userInfo"
+      :type="'name'"
+      @value="userName"
+    />
+    <TDWrapper
+      class="trow__phone"
+      :userData="user.phone"
+      :userInfo="userInfo"
+      :type="'phone'"
+      @value="userPhone"
+    />
+    <TDWrapper
+      class="trow__email"
+      :userData="user.email"
+      :userInfo="userInfo"
+      :type="'email'"
+      @value="userEmail"
+    />
+    <TDWrapper
+      class="trow__registration"
+      :userData="user.registration"
+      :userInfo="userInfo"
+      :type="'registration'"
+      @value="userRegistration"
+    />
+    <TDWrapper
+      class="trow__code"
+      :userData="user.code"
+      :userInfo="userInfo"
+      :type="'code'"
+      @value="userCode"
+    />
+    <TDWrapper
+      class="trow__city"
+      :userData="user.city"
+      :userInfo="userInfo"
+      :type="'city'"
+      @value="userCity"
+    />
   </tr>
 </template>
 
 <script lang="ts">
 import { mapGetters, mapActions } from 'vuex'
 import IconWrapper from '@/components/wrappers/IconWrapper.vue'
+import TDWrapper from '@/components/wrappers/TDWrapper.vue'
 import { IUser } from '@/store/types'
 import { Validator } from '@/helpers/validator'
+
+const validator = new Validator()
 
 export default {
   name: 'UserRow',
   components: {
-    IconWrapper
+    IconWrapper,
+    TDWrapper
   },
   props: {
     user: Object
   },
-  data () {
+  data (): IUser {
     return {
       name: this.user.name,
       phone: this.user.phone,
@@ -90,7 +76,7 @@ export default {
       city: this.user.city,
       id: this.user.id,
       selected: this.user.selected,
-      isValid: false
+      valid: this.user.valid
     }
   },
   computed: {
@@ -102,7 +88,7 @@ export default {
       return this.getSaveEvent && this.selectCondition
     },
     editCondition (): boolean {
-      return this.getEditEvent && this.selectCondition
+      return this.getNewUserState || this.getEditEvent
     },
     checkboxState (): string {
       if (this.selectCondition) {
@@ -112,59 +98,29 @@ export default {
       }
     },
     editUserStyle (): string {
-      if (this.getNewUserState || this.getEditEvent) {
+      if (this.editCondition) {
         return 'pointer-events: none;'
       } else {
         return 'pointer-events: auto;'
       }
     },
-    nameValid (): string {
-      const validator = new Validator()
-      if (validator.isValid({ type: 'name', value: this.name })) {
-        return 'border: 1px solid #4aa6ff;'
-      } else {
-        return 'border: 1px solid red;'
+    userInfo (): { isSelected: boolean; isValid: boolean; id: number, isEdit: boolean } {
+      return {
+        isSelected: this.user.selected,
+        isValid: this.user.valid,
+        id: this.user.id,
+        isEdit: this.editCondition
       }
     },
-    phoneValid (): string {
-      const validator = new Validator()
-      if (validator.isValid({ type: 'phone', value: this.phone })) {
-        return 'border: 1px solid #4aa6ff;'
-      } else {
-        return 'border: 1px solid red;'
-      }
-    },
-    emailValid (): string {
-      const validator = new Validator()
-      if (validator.isValid({ type: 'email', value: this.email })) {
-        return 'border: 1px solid #4aa6ff;'
-      } else {
-        return 'border: 1px solid red;'
-      }
-    },
-    registrationValid (): string {
-      const validator = new Validator()
-      if (validator.isValid({ type: 'registration', value: this.registration })) {
-        return 'border: 1px solid #4aa6ff;'
-      } else {
-        return 'border: 1px solid red;'
-      }
-    },
-    codeValid (): string {
-      const validator = new Validator()
-      if (validator.isValid({ type: 'code', value: this.code })) {
-        return 'border: 1px solid #4aa6ff;'
-      } else {
-        return 'border: 1px solid red;'
-      }
-    },
-    cityValid (): string {
-      const validator = new Validator()
-      if (validator.isValid({ type: 'city', value: this.city })) {
-        return 'border: 1px solid #4aa6ff;'
-      } else {
-        return 'border: 1px solid red;'
-      }
+    isAllValid (): boolean {
+      return validator.isAllValid(
+        this.name,
+        this.phone,
+        this.email,
+        this.registration,
+        this.code,
+        this.city
+      )
     }
   },
   methods: {
@@ -173,7 +129,7 @@ export default {
       'removeSelection',
       'updateUser',
       'saveEventObserver',
-      'checkValidation'
+      'changeUserValidation'
     ]),
     select (): void {
       if (!this.selectCondition) {
@@ -181,6 +137,24 @@ export default {
       } else {
         this.$store.dispatch('removeSelection', this.user.id)
       }
+    },
+    userName (value: string): void {
+      this.name = value
+    },
+    userPhone (value: string): void {
+      this.phone = value
+    },
+    userEmail (value: string): void {
+      this.email = value
+    },
+    userRegistration (value: string): void {
+      this.registration = value
+    },
+    userCode (value: string): void {
+      this.code = value
+    },
+    userCity (value: string): void {
+      this.city = value
     }
   },
   watch: {
@@ -194,7 +168,8 @@ export default {
           code: this.code,
           city: this.city,
           id: this.user.id,
-          selected: false
+          selected: false,
+          valid: this.user.valid
         })
         this.$nextTick(() => {
           this.$store.dispatch('editEventObserver', false)
@@ -204,14 +179,17 @@ export default {
         })
       }
     },
-    getEditEvent (): void {
-      if (!this.editCondition) {
-        this.name = this.user.name
-        this.phone = this.user.phone
-        this.email = this.user.email
-        this.registration = this.user.registration
-        this.code = this.user.code
-        this.city = this.user.city
+    isAllValid (): void {
+      if (this.isAllValid) {
+        this.$store.dispatch('changeUserValidation', {
+          id: this.user.id,
+          valid: true
+        })
+      } else {
+        this.$store.dispatch('changeUserValidation', {
+          id: this.user.id,
+          valid: false
+        })
       }
     }
   }
