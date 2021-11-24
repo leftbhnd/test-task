@@ -1,59 +1,65 @@
 <template>
   <tr>
-    <td class="trow__checkbox" @click="select" :style="isEditUser">
+    <td class="trow__checkbox" @click="select" :style="editUserStyle">
       <IconWrapper class="checkbox" :src="checkboxState" />
     </td>
     <td class="trow__name">
       <input
+        v-if="editCondition"
         class="table-input"
         type="text"
         v-model="name"
-        v-if="editCondition"
+        :style="nameValid"
       />
       <span v-else>{{ user.name }}</span>
     </td>
     <td class="trow__phone">
       <input
+        v-if="editCondition"
         class="table-input"
         type="text"
         v-model="phone"
-        v-if="editCondition"
+        :style="phoneValid"
       />
       <span v-else>{{ user.phone }}</span>
     </td>
     <td class="trow__email">
       <input
+        v-if="editCondition"
         class="table-input"
         type="text"
         v-model="email"
-        v-if="editCondition"
+        :style="emailValid"
       />
       <span v-else>{{ user.email }}</span>
     </td>
     <td class="trow__registration">
       <input
+        v-if="editCondition"
         class="table-input"
         type="text"
         v-model="registration"
-        v-if="editCondition"
+        :style="registrationValid"
       />
       <span v-else>{{ user.registration }}</span>
     </td>
     <td class="trow__code">
       <input
+        v-if="editCondition"
         class="table-input"
         type="text"
         v-model="code"
-        v-if="editCondition"
+        :style="codeValid"
       />
       <span v-else>{{ user.code }}</span>
     </td>
     <td class="trow__city">
       <input
+        v-if="editCondition"
         class="table-input"
         type="text"
         v-model="city"
-        v-if="editCondition"
+        :style="cityValid"
       />
       <span v-else>{{ user.city }}</span>
     </td>
@@ -64,6 +70,7 @@
 import { mapGetters, mapActions } from 'vuex'
 import IconWrapper from '@/components/wrappers/IconWrapper.vue'
 import { IUser } from '@/store/types'
+import { Validator } from '@/helpers/validator'
 
 export default {
   name: 'UserRow',
@@ -73,7 +80,7 @@ export default {
   props: {
     user: Object
   },
-  data (): IUser {
+  data () {
     return {
       name: this.user.name,
       phone: this.user.phone,
@@ -82,7 +89,8 @@ export default {
       code: this.user.code,
       city: this.user.city,
       id: this.user.id,
-      selected: this.user.selected
+      selected: this.user.selected,
+      isValid: false
     }
   },
   computed: {
@@ -103,11 +111,59 @@ export default {
         return require('@/assets/svg/unchecked.svg')
       }
     },
-    isEditUser (): string {
+    editUserStyle (): string {
       if (this.getNewUserState || this.getEditEvent) {
         return 'pointer-events: none;'
       } else {
         return 'pointer-events: auto;'
+      }
+    },
+    nameValid (): string {
+      const validator = new Validator()
+      if (validator.isValid({ type: 'name', value: this.name })) {
+        return 'border: 1px solid #4aa6ff;'
+      } else {
+        return 'border: 1px solid red;'
+      }
+    },
+    phoneValid (): string {
+      const validator = new Validator()
+      if (validator.isValid({ type: 'phone', value: this.phone })) {
+        return 'border: 1px solid #4aa6ff;'
+      } else {
+        return 'border: 1px solid red;'
+      }
+    },
+    emailValid (): string {
+      const validator = new Validator()
+      if (validator.isValid({ type: 'email', value: this.email })) {
+        return 'border: 1px solid #4aa6ff;'
+      } else {
+        return 'border: 1px solid red;'
+      }
+    },
+    registrationValid (): string {
+      const validator = new Validator()
+      if (validator.isValid({ type: 'registration', value: this.registration })) {
+        return 'border: 1px solid #4aa6ff;'
+      } else {
+        return 'border: 1px solid red;'
+      }
+    },
+    codeValid (): string {
+      const validator = new Validator()
+      if (validator.isValid({ type: 'code', value: this.code })) {
+        return 'border: 1px solid #4aa6ff;'
+      } else {
+        return 'border: 1px solid red;'
+      }
+    },
+    cityValid (): string {
+      const validator = new Validator()
+      if (validator.isValid({ type: 'city', value: this.city })) {
+        return 'border: 1px solid #4aa6ff;'
+      } else {
+        return 'border: 1px solid red;'
       }
     }
   },
@@ -116,7 +172,8 @@ export default {
       'selectUser',
       'removeSelection',
       'updateUser',
-      'saveEventObserver'
+      'saveEventObserver',
+      'checkValidation'
     ]),
     select (): void {
       if (!this.selectCondition) {
