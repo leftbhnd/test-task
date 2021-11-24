@@ -1,15 +1,16 @@
 export interface IApiUser {
   name: string
-  phone: number | string
+  phone: string
   email: string
   registration: string
-  code: number
+  code: string
   city: string
   id: number
 }
 
 export interface IUser extends IApiUser {
   selected: boolean
+  valid: boolean
 }
 
 export interface IResponse {

@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { IUser } from '@/store/types'
+import { Validator } from '@/helpers/validator'
+
+const validator = new Validator()
 
 Vue.use(Vuex)
 
@@ -9,7 +12,8 @@ export default new Vuex.Store({
     users: [] as IUser[],
     newUserState: false,
     saveEventState: false,
-    editEventState: false
+    editEventState: false,
+    isNewUserValid: false
   },
   mutations: {
     NEW_USER_OBSERVER (state, payload: boolean) {
@@ -20,6 +24,15 @@ export default new Vuex.Store({
     },
     EDIT_EVENT_OBSERVER (state, payload: boolean) {
       state.editEventState = payload
+    },
+    VALIDATION_OBSERVER (state, payload: IUser[]) {
+      state.users = payload
+    },
+    NEW_USER_VALIDATION_OBSERVER (state, payload: boolean) {
+      state.isNewUserValid = payload
+    },
+    CHANGE_USER_VALIDATION (state, payload: IUser[]) {
+      state.users = payload
     },
 
     SELECT_ALL_USERS (state, payload: IUser[]) {
@@ -54,6 +67,38 @@ export default new Vuex.Store({
     },
     editEventObserver ({ commit }, payload: boolean) {
       commit('EDIT_EVENT_OBSERVER', payload)
+    },
+    validationObserver (
+      { commit },
+      payload: { id: number; type: 'string'; value: string }
+    ) {
+      const updated = this.state.users.map(user => {
+        if (user.id === payload.id) {
+          const condition = validator.isValid({
+            type: payload.type,
+            value: payload.value
+          })
+          if (condition) {
+            user.valid = true
+          } else {
+            user.valid = false
+          }
+        }
+        return user
+      })
+      commit('VALIDATION_OBSERVER', updated)
+    },
+    newUserValidationObserver ({ commit }, payload: boolean) {
+      commit('NEW_USER_VALIDATION_OBSERVER', payload)
+    },
+    changeUserValidation ({ commit }, payload: {id: number, valid: boolean}) {
+      const updated = this.state.users.map(user => {
+        if (user.id === payload.id) {
+          user.valid = payload.valid
+        }
+        return user
+      })
+      commit('CHANGE_USER_VALIDATION', updated)
     },
 
     selectAllUsers ({ commit }, payload: boolean) {
@@ -90,9 +135,8 @@ export default new Vuex.Store({
     getUsersFromApi ({ commit }, payload: IUser[]) {
       const updated = payload.map(user => {
         user.id = Number(user.id)
-        user.phone = Number(user.phone)
-        user.code = Number(user.code)
         user.selected = false
+        user.valid = true
         return user
       })
       commit('GET_USERS_FROM_API', updated)
@@ -141,6 +185,22 @@ export default new Vuex.Store({
           return user
         }
       })
+    },
+
+    getIsEditUserValid (state): boolean {
+      const filtred = state.users.filter(user => {
+        if (!user.valid) {
+          return user
+        }
+      })
+      if (!filtred.length) {
+        return true
+      } else {
+        return false
+      }
+    },
+    getIsNewUserValid (state): boolean {
+      return state.isNewUserValid
     }
   }
 })
