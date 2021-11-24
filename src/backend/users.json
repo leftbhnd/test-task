@@ -1,39 +1,39 @@
 {
   "users": {
     "user1": {
-      "name": "Dima",
-      "phone": "89194859164",
+      "name": "Дмитрий Лалетин",
+      "phone": "+7(919)-485-91-64",
       "email": "d.laletin@promo-bot.ru",
       "registration": "11.11.2021",
       "code": "123",
-      "city": "Perm",
+      "city": "Пермь",
       "id": "0"
     },
     "user2": {
-      "name": "Dima",
-      "phone": "89194859165",
+      "name": "Дмитрий Лалетин",
+      "phone": "+7(919)-485-91-64",
       "email": "c.laletin@promo-bot.ru",
       "registration": "12.11.2021",
-      "code": "1234",
-      "city": "Perm-1",
+      "code": "321",
+      "city": "Пермь",
       "id": "1"
     },
     "user3": {
-      "name": "Dima",
-      "phone": "89194859166",
+      "name": "Дмитрий Лалетин",
+      "phone": "+7(919)-485-91-64",
       "email": "e.laletin@promo-bot.ru",
       "registration": "13.11.2021",
-      "code": "1235",
-      "city": "Perm-2",
+      "code": "222",
+      "city": "Пермь",
       "id": "2"
     },
     "user4": {
-      "name": "Dima",
-      "phone": "89194859167",
+      "name": "Дмитрий Лалетин",
+      "phone": "+7(919)-485-91-64",
       "email": "f.laletin@promo-bot.ru",
       "registration": "14.11.2021",
-      "code": "1236",
-      "city": "Perm-3",
+      "code": "111",
+      "city": "Пермь",
       "id": "3"
     }
   }
