@@ -26,7 +26,6 @@
     />
     <IMask
       class="trow__code"
-      v-model="user.code"
       :inputInfo="info.codeInfo"
       @inputValue="codeValue"
     />
