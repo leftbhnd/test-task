@@ -1,7 +1,7 @@
 export class Validator {
   private regexName = /^[А-Я]{1}[а-я]+ [А-Я]{1}[а-я]+$/
 
-  private regexPhone = /^\+7\([0-9]{3}\)-{1}[0-9]{3}-[0-9]{2}-[0-9]{2}$/
+  private regexPhone = /^\+7\([0-9]{3}\)-[0-9]{3}-[0-9]{4}$/
 
   private regexEmail = /^[a-zA-Z_]{1}[\da-zA-Z.-]+[a-zA-Z]{1}@[a-zA-Z]{1}[\da-zA-Z-]+[a-zA-Z]{1}\.[a-z]{2,3}$/
 

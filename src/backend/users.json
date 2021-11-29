@@ -2,7 +2,7 @@
   "users": {
     "user1": {
       "name": "Дмитрий Лалетин",
-      "phone": "+7(919)-485-91-64",
+      "phone": "+7(919)-485-9164",
       "email": "d.laletin@promo-bot.ru",
       "registration": "11.11.2021",
       "code": "123",
@@ -11,7 +11,7 @@
     },
     "user2": {
       "name": "Дмитрий Лалетин",
-      "phone": "+7(919)-485-91-64",
+      "phone": "+7(919)-485-9164",
       "email": "c.laletin@promo-bot.ru",
       "registration": "12.11.2021",
       "code": "321",
@@ -20,7 +20,7 @@
     },
     "user3": {
       "name": "Дмитрий Лалетин",
-      "phone": "+7(919)-485-91-64",
+      "phone": "+7(919)-485-9164",
       "email": "e.laletin@promo-bot.ru",
       "registration": "13.11.2021",
       "code": "222",
@@ -29,7 +29,7 @@
     },
     "user4": {
       "name": "Дмитрий Лалетин",
-      "phone": "+7(919)-485-91-64",
+      "phone": "+7(919)-485-9164",
       "email": "f.laletin@promo-bot.ru",
       "registration": "14.11.2021",
       "code": "111",
