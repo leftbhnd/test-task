@@ -73,21 +73,12 @@ export default {
     cancel (): void {
       if (this.type === 'new') {
         this.$store.dispatch('newUserObserver', false)
-        this.$nextTick(() => {
-          this.$store.dispatch('newUserValidationObserver', false)
-        })
       } else {
         this.$store.dispatch('editEventObserver', false)
       }
     },
     save (): void {
       this.$store.dispatch('saveEventObserver', true)
-      if (this.type === 'new') {
-        this.$store.dispatch('newUserObserver', false)
-        this.$nextTick(() => {
-          this.$store.dispatch('newUserValidationObserver', false)
-        })
-      }
     }
   }
 }
