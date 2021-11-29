@@ -3,47 +3,47 @@
     <td class="trow__checkbox" @click="select" :style="editUserStyle">
       <IconWrapper class="checkbox" :src="checkboxState" />
     </td>
-    <TDWrapper
+    <TDUserWrapper
       class="trow__name"
-      :userData="user.name"
+      :value="user.name"
       :userInfo="userInfo"
-      :type="'name'"
-      @value="userName"
+      :inputInfo="info.nameInfo"
+      @inputValue="userName"
     />
-    <TDWrapper
+    <TDUserWrapper
       class="trow__phone"
-      :userData="user.phone"
+      :value="user.phone"
       :userInfo="userInfo"
-      :type="'phone'"
-      @value="userPhone"
+      :inputInfo="info.phoneInfo"
+      @inputValue="userPhone"
     />
-    <TDWrapper
+    <TDUserWrapper
       class="trow__email"
-      :userData="user.email"
+      :value="user.email"
       :userInfo="userInfo"
-      :type="'email'"
-      @value="userEmail"
+      :inputInfo="info.emailInfo"
+      @inputValue="userEmail"
     />
-    <TDWrapper
+    <TDUserWrapper
       class="trow__registration"
-      :userData="user.registration"
+      :value="user.registration"
       :userInfo="userInfo"
-      :type="'registration'"
-      @value="userRegistration"
+      :inputInfo="info.registrationInfo"
+      @inputValue="userRegistration"
     />
-    <TDWrapper
+    <TDUserWrapper
       class="trow__code"
-      :userData="user.code"
+      :value="user.code"
       :userInfo="userInfo"
-      :type="'code'"
-      @value="userCode"
+      :inputInfo="info.codeInfo"
+      @inputValue="userCode"
     />
-    <TDWrapper
+    <TDUserWrapper
       class="trow__city"
-      :userData="user.city"
+      :value="user.city"
       :userInfo="userInfo"
-      :type="'city'"
-      @value="userCity"
+      :inputInfo="info.cityInfo"
+      @inputValue="userCity"
     />
   </tr>
 </template>
@@ -51,9 +51,10 @@
 <script lang="ts">
 import { mapGetters, mapActions } from 'vuex'
 import IconWrapper from '@/components/wrappers/IconWrapper.vue'
-import TDWrapper from '@/components/wrappers/TDWrapper.vue'
-import { IUser } from '@/store/types'
+import TDUserWrapper from '@/components/wrappers/TDUserWrapper.vue'
+import { IUser, IInputInfo } from '@/store/types'
 import { Validator } from '@/helpers/validator'
+import { inputsInfo } from '@/helpers/inputsInfo'
 
 const validator = new Validator()
 
@@ -61,22 +62,25 @@ export default {
   name: 'UserRow',
   components: {
     IconWrapper,
-    TDWrapper
+    TDUserWrapper
   },
   props: {
     user: Object
   },
-  data (): IUser {
+  data (): { userData: IUser, info: IInputInfo } {
     return {
-      name: this.user.name,
-      phone: this.user.phone,
-      email: this.user.email,
-      registration: this.user.registration,
-      code: this.user.code,
-      city: this.user.city,
-      id: this.user.id,
-      selected: this.user.selected,
-      valid: this.user.valid
+      userData: {
+        name: this.user.name,
+        phone: this.user.phone,
+        email: this.user.email,
+        registration: this.user.registration,
+        code: this.user.code,
+        city: this.user.city,
+        id: this.user.id,
+        selected: this.user.selected,
+        valid: this.user.valid
+      },
+      info: inputsInfo
     }
   },
   computed: {
@@ -104,7 +108,12 @@ export default {
         return 'pointer-events: auto;'
       }
     },
-    userInfo (): { isSelected: boolean; isValid: boolean; id: number, isEdit: boolean } {
+    userInfo (): {
+      isSelected: boolean
+      isValid: boolean
+      id: number
+      isEdit: boolean
+      } {
       return {
         isSelected: this.user.selected,
         isValid: this.user.valid,
@@ -114,12 +123,12 @@ export default {
     },
     isAllValid (): boolean {
       return validator.isAllValid(
-        this.name,
-        this.phone,
-        this.email,
-        this.registration,
-        this.code,
-        this.city
+        this.userData.name,
+        this.userData.phone,
+        this.userData.email,
+        this.userData.registration,
+        this.userData.code,
+        this.userData.city
       )
     }
   },
@@ -139,34 +148,34 @@ export default {
       }
     },
     userName (value: string): void {
-      this.name = value
+      this.userData.name = value
     },
     userPhone (value: string): void {
-      this.phone = value
+      this.userData.phone = value
     },
     userEmail (value: string): void {
-      this.email = value
+      this.userData.email = value
     },
     userRegistration (value: string): void {
-      this.registration = value
+      this.userData.registration = value
     },
     userCode (value: string): void {
-      this.code = value
+      this.userData.code = value
     },
     userCity (value: string): void {
-      this.city = value
+      this.userData.city = value
     }
   },
   watch: {
     getSaveEvent (): void {
       if (this.saveCondition) {
         this.$store.dispatch('updateUser', {
-          name: this.name,
-          phone: this.phone,
-          email: this.email,
-          registration: this.registration,
-          code: this.code,
-          city: this.city,
+          name: this.userData.name,
+          phone: this.userData.phone,
+          email: this.userData.email,
+          registration: this.userData.registration,
+          code: this.userData.code,
+          city: this.userData.city,
           id: this.user.id,
           selected: false,
           valid: this.user.valid
