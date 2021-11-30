@@ -25,24 +25,33 @@
 </template>
 
 <script lang="ts">
+import { mapGetters } from 'vuex'
 import Icon from '@/components/wrappers/IconWrapper.vue'
 
 export default {
-  name: 'Select',
+  name: 'SelectWrapper',
   components: {
     Icon
   },
   props: {
     options: Array,
-    default: Number
+    value: { type: Number, default: 1 }
   },
   data (): { selected: number; open: boolean } {
     return {
-      selected: this.default,
+      selected: this.value,
       open: false
     }
   },
   computed: {
+    ...mapGetters(['getNewUserState', 'getEditEvent', 'getSelectedUsers']),
+    isDisableCondition (): boolean {
+      return (
+        this.getNewUserState ||
+        this.getEditEvent ||
+        this.getSelectedUsers.length
+      )
+    },
     check (): string {
       return require('@/assets/svg/check.svg')
     },
@@ -63,11 +72,14 @@ export default {
     }
   },
   watch: {
-    default (): void {
-      if (this.selected == null) {
-        this.selected = this.default
-        this.changeOption(this.default)
-      }
+    options (): void {
+      this.changeOption(this.value)
+    },
+    value (): void {
+      this.changeOption(this.value)
+    },
+    isDisableCondition (): void {
+      this.open = false
     }
   }
 }
