@@ -22,17 +22,27 @@ export default {
 
 <style lang="scss">
 #app {
-  min-height: 100%;
-  overflow: hidden;
   display: flex;
+  overflow: hidden;
   flex-direction: column;
+
+  height: 744px;
 }
 .container {
   max-width: 1440px;
-  max-height: 744px;
   margin: 0 auto;
 }
 .content {
+  overflow: auto;
   flex: 1 1 auto;
+}
+.content::-webkit-scrollbar {
+  width: 7px;
+
+  background-color: #ffffff;
+}
+.content::-webkit-scrollbar-thumb {
+  border-radius: 100px;
+  background-color: #b4b8c1;
 }
 </style>
