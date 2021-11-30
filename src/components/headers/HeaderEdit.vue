@@ -30,37 +30,23 @@ export default {
       'getIsNewUserValid',
       'getNewUserState'
     ]),
+    saveCondition (): boolean {
+      return this.getNewUserState
+        ? this.getIsNewUserValid
+        : this.getIsEditUserValid
+    },
     title (): string {
-      if (this.type === 'new') {
-        return 'Добавление нового пользователя'
-      } else {
-        return 'Редактирование'
-      }
+      return this.type === 'new'
+        ? 'Добавление нового пользователя'
+        : 'Редактирование'
     },
     getBackGroundColor (): string {
-      if (this.saveCondition) {
-        return '#3e424b'
-      } else {
-        return '#ff7979'
-      }
+      return this.saveCondition ? '#3e424b' : '#ff7979'
     },
     hoverStyle (): { '--background-color-hover': string } {
-      if (this.saveCondition) {
-        return {
-          '--background-color-hover': this.getBackGroundColor
-        }
-      } else {
-        return {
-          '--background-color-hover': this.getBackGroundColor
-        }
-      }
-    },
-    saveCondition (): boolean {
-      if (this.getNewUserState) {
-        return this.getIsNewUserValid
-      } else {
-        return this.getIsEditUserValid
-      }
+      return this.saveCondition
+        ? { '--background-color-hover': this.getBackGroundColor }
+        : { '--background-color-hover': this.getBackGroundColor }
     }
   },
   methods: {
@@ -71,11 +57,9 @@ export default {
       'newUserValidationObserver'
     ]),
     cancel (): void {
-      if (this.type === 'new') {
-        this.$store.dispatch('newUserObserver', false)
-      } else {
-        this.$store.dispatch('editEventObserver', false)
-      }
+      this.type === 'new'
+        ? this.$store.dispatch('newUserObserver', false)
+        : this.$store.dispatch('editEventObserver', false)
     },
     save (): void {
       this.$store.dispatch('saveEventObserver', true)

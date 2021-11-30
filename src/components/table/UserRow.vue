@@ -67,7 +67,7 @@ export default {
   props: {
     user: Object
   },
-  data (): { userData: IUser, info: IInputInfo } {
+  data (): { userData: IUser; info: IInputInfo } {
     return {
       userData: {
         name: this.user.name,
@@ -95,18 +95,14 @@ export default {
       return this.getNewUserState || this.getEditEvent
     },
     checkboxState (): string {
-      if (this.selectCondition) {
-        return require('@/assets/svg/checked.svg')
-      } else {
-        return require('@/assets/svg/unchecked.svg')
-      }
+      return this.selectCondition
+        ? require('@/assets/svg/checked.svg')
+        : require('@/assets/svg/unchecked.svg')
     },
     editUserStyle (): string {
-      if (this.editCondition) {
-        return 'pointer-events: none;'
-      } else {
-        return 'pointer-events: auto;'
-      }
+      return this.editCondition
+        ? 'pointer-events: none;'
+        : 'pointer-events: auto;'
     },
     userInfo (): {
       isSelected: boolean
@@ -135,17 +131,16 @@ export default {
   methods: {
     ...mapActions([
       'selectUser',
+      'selectAllUsers',
       'removeSelection',
       'updateUser',
       'saveEventObserver',
       'changeUserValidation'
     ]),
     select (): void {
-      if (!this.selectCondition) {
-        this.$store.dispatch('selectUser', this.user.id)
-      } else {
-        this.$store.dispatch('removeSelection', this.user.id)
-      }
+      !this.selectCondition
+        ? this.$store.dispatch('selectUser', this.user.id)
+        : this.$store.dispatch('removeSelection', this.user.id)
     },
     userName (value: string): void {
       this.userData.name = value
@@ -184,22 +179,23 @@ export default {
           this.$store.dispatch('editEventObserver', false)
         })
         this.$nextTick(() => {
+          this.$store.dispatch('selectAllUsers', false)
+        })
+        this.$nextTick(() => {
           this.$store.dispatch('saveEventObserver', false)
         })
       }
     },
     isAllValid (): void {
-      if (this.isAllValid) {
-        this.$store.dispatch('changeUserValidation', {
+      this.isAllValid
+        ? this.$store.dispatch('changeUserValidation', {
           id: this.user.id,
           valid: true
         })
-      } else {
-        this.$store.dispatch('changeUserValidation', {
+        : this.$store.dispatch('changeUserValidation', {
           id: this.user.id,
           valid: false
         })
-      }
     }
   }
 }

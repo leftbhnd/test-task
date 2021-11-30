@@ -1,7 +1,7 @@
 <template>
   <thead>
     <tr class="trow">
-      <th class="trow__checkbox" @click="selectAll" :style="isEditState">
+      <th class="trow__checkbox" @click="selectAll" :style="editStyle">
         <IconWrapper class="checkbox" :src="checkboxState" />
       </th>
       <th class="trow__name">
@@ -36,9 +36,20 @@ export default {
     IconWrapper
   },
   computed: {
-    ...mapGetters(['getNewUserState', 'getUsers', 'getSelectedUsers', 'getEditEvent']),
+    ...mapGetters([
+      'getNewUserState',
+      'getUsers',
+      'getSelectedUsers',
+      'getEditEvent'
+    ]),
+    isEditCondition (): boolean {
+      return this.getNewUserState || this.getEditEvent
+    },
     checkAllConditon (): boolean {
-      return this.getUsers.length === this.getSelectedUsers.length && this.getUsers.length
+      return (
+        this.getUsers.length === this.getSelectedUsers.length &&
+        this.getUsers.length
+      )
     },
     checkboxState (): string {
       if (this.checkAllConditon) {
@@ -49,22 +60,16 @@ export default {
         return require('@/assets/svg/unchecked.svg')
       }
     },
-    isEditState (): string {
-      if (this.getNewUserState || this.getEditEvent) {
-        return 'pointer-events: none;'
-      } else {
-        return 'pointer-events: auto;'
-      }
+    editStyle (): string {
+      return this.isEditCondition ? 'pointer-events: none;' : 'pointer-events: auto;'
     }
   },
   methods: {
     ...mapActions(['selectAllUsers']),
     selectAll (): void {
-      if (!this.checkAllConditon) {
-        this.$store.dispatch('selectAllUsers', true)
-      } else {
-        this.$store.dispatch('selectAllUsers', false)
-      }
+      !this.checkAllConditon
+        ? this.$store.dispatch('selectAllUsers', true)
+        : this.$store.dispatch('selectAllUsers', false)
     }
   }
 }

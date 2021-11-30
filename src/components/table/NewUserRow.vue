@@ -157,11 +157,9 @@ export default {
       }
     },
     isAllValid (): void {
-      if (this.isAllValid) {
-        this.$store.dispatch('newUserValidationObserver', true)
-      } else {
-        this.$store.dispatch('newUserValidationObserver', false)
-      }
+      this.isAllValid
+        ? this.$store.dispatch('newUserValidationObserver', true)
+        : this.$store.dispatch('newUserValidationObserver', false)
     }
   }
 }
