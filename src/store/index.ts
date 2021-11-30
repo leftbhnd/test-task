@@ -13,7 +13,9 @@ export default new Vuex.Store({
     newUserState: false,
     saveEventState: false,
     editEventState: false,
-    isNewUserValid: false
+    isNewUserValid: false,
+    paginationStart: 0,
+    paginationEnd: 14
   },
   mutations: {
     NEW_USER_OBSERVER (state, payload: boolean) {
@@ -56,6 +58,12 @@ export default new Vuex.Store({
     },
     DELETE_USER (state, payload: IUser[]) {
       state.users = payload
+    },
+    SET_PAGINATION_START (state, payload: number) {
+      state.paginationStart = payload
+    },
+    SET_PAGINATION_END (state, payload: number) {
+      state.paginationEnd = payload
     }
   },
   actions: {
@@ -78,11 +86,9 @@ export default new Vuex.Store({
             type: payload.type,
             value: payload.value
           })
-          if (condition) {
-            user.valid = true
-          } else {
-            user.valid = false
-          }
+          condition
+            ? user.valid = true
+            : user.valid = false
         }
         return user
       })
@@ -91,7 +97,7 @@ export default new Vuex.Store({
     newUserValidationObserver ({ commit }, payload: boolean) {
       commit('NEW_USER_VALIDATION_OBSERVER', payload)
     },
-    changeUserValidation ({ commit }, payload: {id: number, valid: boolean}) {
+    changeUserValidation ({ commit }, payload: { id: number, valid: boolean }) {
       const updated = this.state.users.map(user => {
         if (user.id === payload.id) {
           user.valid = payload.valid
@@ -104,11 +110,9 @@ export default new Vuex.Store({
     selectAllUsers ({ commit }, payload: boolean) {
       let updated = []
       updated = this.state.users.map(user => {
-        if (payload) {
-          user.selected = true
-        } else {
-          user.selected = false
-        }
+        payload
+          ? user.selected = true
+          : user.selected = false
         return user
       })
       commit('SELECT_ALL_USERS', updated)
@@ -146,11 +150,9 @@ export default new Vuex.Store({
     },
     updateUser ({ commit }, payload: IUser) {
       const updated = this.state.users.map(user => {
-        if (user.id === payload.id) {
-          return payload
-        } else {
-          return user
-        }
+        return user.id === payload.id
+          ? payload
+          : user
       })
       commit('UPDATE_USER', updated)
     },
@@ -164,6 +166,13 @@ export default new Vuex.Store({
         }
       })
       commit('DELETE_USER', updated)
+    },
+
+    setPaginationStart ({ commit }, payload: number) {
+      commit('SET_PAGINATION_START', payload)
+    },
+    setPaginationEnd ({ commit }, payload: number) {
+      commit('SET_PAGINATION_END', payload)
     }
   },
   getters: {
@@ -193,14 +202,17 @@ export default new Vuex.Store({
           return user
         }
       })
-      if (!filtred.length) {
-        return true
-      } else {
-        return false
-      }
+      return !filtred.length
     },
     getIsNewUserValid (state): boolean {
       return state.isNewUserValid
+    },
+
+    getPaginationStart (state): number {
+      return state.paginationStart
+    },
+    getPaginationEnd (state): number {
+      return state.paginationEnd
     }
   }
 })

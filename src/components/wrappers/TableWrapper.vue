@@ -4,7 +4,7 @@
       <HeaderRow class="table__header" />
       <NewUserRow v-if="getNewUserState" />
       <UserRow
-        v-for="(user, index) in getUsers"
+        v-for="(user, index) in users"
         :key="index"
         :user="user"
         class="trow"
@@ -18,6 +18,7 @@ import { mapGetters } from 'vuex'
 import HeaderRow from '@/components/table/HeaderRow.vue'
 import NewUserRow from '@/components/table/NewUserRow.vue'
 import UserRow from '@/components/table/UserRow.vue'
+import { IUser } from '@/store/types'
 
 export default {
   name: 'TableWrapper',
@@ -27,7 +28,15 @@ export default {
     UserRow
   },
   computed: {
-    ...mapGetters(['getUsers', 'getNewUserState'])
+    ...mapGetters([
+      'getUsers',
+      'getNewUserState',
+      'getPaginationStart',
+      'getPaginationEnd'
+    ]),
+    users (): IUser[] {
+      return this.getUsers.slice(this.getPaginationStart, this.getPaginationEnd)
+    }
   }
 }
 </script>
@@ -42,6 +51,8 @@ export default {
   background-color: #ffffff;
   &__header {
     display: flex;
+
+    height: 48px;
 
     border-top: 1px solid #c6d1dd80;
     background-color: #f0f2f480;
@@ -98,12 +109,16 @@ export default {
     line-height: 16px;
   }
 }
+th {
+  height: 48px;
+}
+td {
+  height: 40px;
+}
 th,
 td {
   display: flex;
   align-items: center;
-
-  height: 48px;
 
   border-bottom: 1px solid #c6d1dd80;
   border-left: 1px solid #c6d1dd80;
